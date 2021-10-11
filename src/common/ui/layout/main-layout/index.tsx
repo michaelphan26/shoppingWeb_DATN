@@ -3,15 +3,19 @@ import Footer from './components/footer';
 import Header from './components/header';
 import './style.scss';
 import { Container } from 'react-bootstrap';
+import CustomToastContainer from '../../base/toast';
 
 interface Props {
   children: ReactNode;
 }
 const MainLayout = (props: Props) => {
   return (
-    <div className="main-layout">
+    <div>
       <Header />
-      <Container className="body">{props.children}</Container>
+      <Container className="body">
+        {props.children}
+        <CustomToastContainer />
+      </Container>
       <Footer />
     </div>
   );

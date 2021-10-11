@@ -5,14 +5,17 @@ import ProductCardItem from '../../common/ui/layout/main-layout/components/produ
 import { getProductListFromAPI } from '../../common/util/baseAPI';
 import { ProductItem } from '../../common/util/common';
 import './style.scss';
+import { toastNotify } from '../../common/ui/base/toast/notify';
 
 const Menu = () => {
   const [productList, setProductList] = useState([] as any);
 
   const getProductList = async () => {
     const productListFromAPI = await getProductListFromAPI();
-    if (typeof productListFromAPI !== 'string') {
+    if (Object.keys(productListFromAPI).length !== 0) {
       setProductList(productListFromAPI);
+    } else {
+      toastNotify('error', 'Không thể lấy danh sách sản phẩm');
     }
   };
 

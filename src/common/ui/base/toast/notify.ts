@@ -1,23 +1,24 @@
 /* eslint-disable no-lone-blocks */
 import React from 'react';
 import {  toast } from "react-toastify";
+import { NotifyType } from '../../../util/enum';
 import { ErrorToast, InfoToast, SuccessToast, WarningToast } from './toastComponent';
 
 export function toastNotify(type:string,msg:string){
     switch (type){
-        case "success": {
+        case NotifyType.success: {
             toast(SuccessToast(msg))
             break;
         };
-        case "error": {
+        case NotifyType.error: {
             toast(ErrorToast(msg));
             break;
         };
-        case "warning": {
+        case NotifyType.warning: {
             toast(WarningToast(msg));
             break;
         };
-        case "info": {
+        case NotifyType.info: {
             toast(InfoToast(msg));
             break;
         };

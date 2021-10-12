@@ -3,10 +3,13 @@
 }
 
 .body {
+  min-height: 80vh;
   font-weight: bold;
+  color: black;
 }
 
 .footer {
+  margin: 10px 0px;
   text-align: center;
   font-weight: bold;
 }
@@ -23,6 +26,7 @@
   align-items: center;
   text-align: center;
   padding: 10px;
+  color: black;
 }
 
 .imgStyle {

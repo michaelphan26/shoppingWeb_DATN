@@ -9,3 +9,10 @@ export enum Color{
     "pink-p"="#DE3367",
     "dark-blue"="#364F6B"
 }
+
+export enum NotifyType{
+    "success" = "success",
+    "error" = "error",
+    "info" = "info",
+    "warning" ="warning"
+}

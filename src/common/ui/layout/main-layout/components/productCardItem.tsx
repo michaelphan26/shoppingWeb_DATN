@@ -15,6 +15,7 @@ const ProductCardItem = (props: Props) => {
         pathname: `product/${props.productItem._id}`,
         state: { productItem: props.productItem },
       }}
+      style={{ textDecoration: 'none' }}
     >
       <Card className="productCard">
         <Card.Img

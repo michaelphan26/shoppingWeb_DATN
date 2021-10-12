@@ -1,0 +1,16 @@
+.rowContainer {
+  min-height: 80vh;
+  align-items: center;
+}
+
+.authImage {
+  width: 300;
+  height: 200;
+  object-fit: fill;
+  border-radius: 20px;
+}
+
+.loginContainer {
+  display: flex;
+  justify-content: center;
+}

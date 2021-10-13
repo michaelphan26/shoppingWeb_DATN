@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import './style.scss';
-import { FaShoppingCart } from 'react-icons/fa';
 
 interface Props {
   backgroundColor: string;
   textColor: string;
   title: string;
   onPressed: () => void;
+  children: ReactNode;
 }
 const MainButton = (props: Props) => {
   return (
@@ -14,12 +14,9 @@ const MainButton = (props: Props) => {
       className="mainButtonContainer"
       style={{ backgroundColor: `${props.backgroundColor}` }}
       onClick={() => props.onPressed()}
+      type="submit"
     >
-      <FaShoppingCart
-        size={18}
-        color={`${props.textColor}`}
-        style={{ marginRight: 5 }}
-      />
+      {props.children}
       <span style={{ color: `${props.textColor}` }}>{props.title}</span>
     </button>
   );

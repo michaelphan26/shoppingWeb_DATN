@@ -1,25 +1,26 @@
 import React, { useState } from 'react';
-import { Col, Row, Container } from 'react-bootstrap';
+import { Controller, useForm } from 'react-hook-form';
 import AuthLayout from '../../../common/ui/layout/auth-layout';
 import AuthCardView from '../../../common/ui/layout/auth-layout/components/authCardView';
-import AuthImg from '../../../common/ui/assets/auth-image.jpg';
+import { Col, Row } from 'react-bootstrap';
 import '../style.scss';
+import { emailReg } from '../../../common/util/common';
+import CheckBox from '../../../common/ui/base/checkbox';
+import { MainButton } from '../../../common/ui/base/button';
 import { SmallTextInput } from '../../../common/ui/base/textInput';
 import { Link } from 'react-router-dom';
-import { MainButton } from '../../../common/ui/base/button';
-import { Color } from '../../../common/util/enum';
-import { Controller, useForm } from 'react-hook-form';
-import { emailReg } from '../../../common/util/common';
-import axios from 'axios';
-import { api_url } from '../../../common/util/baseAPI';
-import CheckBox from '../../../common/ui/base/checkbox';
-import { Url } from '../../../common/util/enum';
+import AuthImg from '../../../common/ui/assets/auth-image.jpg';
+import { Url, Color } from '../../../common/util/enum';
 
-interface LoginInfo {
+interface RegisterInfo {
   email: string;
   password: string;
+  confirmPassword: string;
+  name: string;
+  phoneNumber: string;
+  address: string;
 }
-const Login = () => {
+const Register = () => {
   const {
     control,
     handleSubmit,
@@ -36,7 +37,7 @@ const Login = () => {
     setRemember(!remember);
   };
 
-  const handleLoginPress = async (loginInfo: LoginInfo) => {
+  const handleLoginPress = async (registerInfo: RegisterInfo) => {
     // await axios({
     //   url: '/auth/login',
     //   baseURL: `${api_url}`,
@@ -138,4 +139,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

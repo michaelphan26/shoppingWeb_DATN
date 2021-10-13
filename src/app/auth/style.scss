@@ -1,6 +1,5 @@
 .rowContainer {
   min-height: 80vh;
-  align-items: center;
 }
 
 .authImage {
@@ -12,5 +11,11 @@
 
 .loginContainer {
   display: flex;
-  justify-content: center;
+  align-items: center;
+}
+
+.errorText {
+  font-size: 14px;
+  color: red;
+  margin-bottom: 20px;
 }

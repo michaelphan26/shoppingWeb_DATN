@@ -16,3 +16,10 @@ export enum NotifyType{
     "info" = "info",
     "warning" ="warning"
 }
+
+export enum Url{
+    Home= '/',
+    Login = '/login',
+    Register = '/register',
+    ProductDetail='/product/:id'
+}

@@ -1,0 +1,53 @@
+.smallTextInputContainer {
+  width: 80%;
+  height: 12%;
+  border-radius: 20px;
+  border: none;
+  padding: 10px 15px;
+  color: black;
+  margin: 20px 0px;
+  font-weight: bold;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.05);
+}
+
+.smallTextInput {
+  width: 90%;
+  border: none;
+  margin-right: 10px;
+}
+.smallTextInput:hover {
+  border: none;
+}
+.smallTextInput:focus {
+  outline: none;
+}
+
+.largeTextInputContainer {
+  width: 70%;
+  height: 15%;
+  border-radius: 20px;
+  border: none;
+  padding: 10px 15px;
+  color: black;
+  margin: 20px 0px;
+  font-weight: bold;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.05);
+}
+
+.largeTextInput {
+  width: 90%;
+  border: none;
+  margin-right: 10px;
+}
+.largeTextInput:hover {
+  border: none;
+}
+.largeTextInput:focus {
+  outline: none;
+}
+
+.registerText {
+  color: black;
+  font-weight: bold;
+  text-decoration: underline;
+}

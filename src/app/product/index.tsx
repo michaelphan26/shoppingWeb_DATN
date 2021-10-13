@@ -9,6 +9,7 @@ import numeral from 'numeral';
 import { MainButton, RoundedQuantityButton } from '../../common/ui/base/button';
 import { Color, NotifyType } from '../../common/util/enum';
 import { toastNotify } from '../../common/ui/base/toast/notify';
+import { FaShoppingCart } from 'react-icons/fa';
 
 type ProductState = {
   productItem: ProductItem;
@@ -150,7 +151,13 @@ const Product = (props: Props) => {
               textColor={Color.white}
               title="Thêm vào giỏ hàng"
               onPressed={handleAddToCart}
-            />
+            >
+              <FaShoppingCart
+                size={18}
+                color="white"
+                style={{ marginRight: 5 }}
+              />
+            </MainButton>
           </Col>
         </Row>
       </Row>

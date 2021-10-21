@@ -1,25 +1,29 @@
 import React, { useState } from 'react';
-import { Col, Row, Container } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 import AuthLayout from '../../../common/ui/layout/auth-layout';
 import AuthCardView from '../../../common/ui/layout/auth-layout/components/authCardView';
 import AuthImg from '../../../common/ui/assets/auth-image.jpg';
 import '../style.scss';
 import { SmallTextInput } from '../../../common/ui/base/textInput';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import { MainButton } from '../../../common/ui/base/button';
-import { Color } from '../../../common/util/enum';
+import { Color, NotifyType } from '../../../common/util/enum';
 import { Controller, useForm } from 'react-hook-form';
 import { emailReg } from '../../../common/util/common';
 import axios from 'axios';
 import { api_url } from '../../../common/util/baseAPI';
 import CheckBox from '../../../common/ui/base/checkbox';
 import { Url } from '../../../common/util/enum';
+import { useDispatch } from 'react-redux';
+import { accountLogin } from '../../../models/accountReducers';
+import { toastNotify } from '../../../common/ui/base/toast/notify';
 
 interface LoginInfo {
   email: string;
   password: string;
 }
-const Login = () => {
+interface Props extends RouteComponentProps<any> {}
+const Login = (props: Props) => {
   const {
     control,
     handleSubmit,
@@ -27,6 +31,8 @@ const Login = () => {
   } = useForm({ reValidateMode: 'onSubmit' });
   const [remember, setRemember] = useState<boolean>(false);
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
+  const checkingOut = props.location.state || false;
+  const dispatch = useDispatch();
 
   const handlePasswordVisibleToggle = () => {
     setPasswordVisible(!passwordVisible);
@@ -37,13 +43,43 @@ const Login = () => {
   };
 
   const handleLoginPress = async (loginInfo: LoginInfo) => {
-    // await axios({
-    //   url: '/auth/login',
-    //   baseURL: `${api_url}`,
-    //   method: 'post',
-    //   data: loginInfo,
-    //   responseType: 'json',
-    // }).then(() => {});
+    await axios({
+      url: '/auth/login',
+      baseURL: `${api_url}`,
+      method: 'post',
+      data: loginInfo,
+      responseType: 'json',
+    })
+      .then(async (res) => {
+        if (res.data['code'] === 200) {
+          dispatch(accountLogin(res.data['data']));
+          if (remember) {
+            await localStorage.setItem(
+              'token',
+              res.headers['x-auth-token'] as string
+            );
+            await window.sessionStorage.setItem(
+              'token',
+              res.headers['x-auth-token'] as string
+            );
+          } else {
+            await window.sessionStorage.setItem(
+              'token',
+              res.headers['x-auth-token'] as string
+            );
+          }
+          if (checkingOut) {
+            props.history.push('/checkout');
+          } else {
+            props.history.push(Url.Home);
+          }
+        } else {
+          toastNotify(NotifyType.error, 'Tài khoản hoặc mật khẩu không đúng');
+        }
+      })
+      .catch((err) => {
+        toastNotify(NotifyType.error, 'Tài khoản hoặc mật khẩu không đúng');
+      });
   };
 
   return (
@@ -55,7 +91,7 @@ const Login = () => {
               src={AuthImg}
               alt="auth_image"
               className="authImage"
-              style={{ width: '100%', height: '50%', alignSelf: 'center' }}
+              style={{ width: '100%', height: '60%', alignSelf: 'center' }}
             />
           </Col>
           <Col sm="6" className="loginContainer">
@@ -73,6 +109,7 @@ const Login = () => {
                       eyeVisible={false}
                       passwordVisible={false}
                       toggleVisible={() => {}}
+                      defaultText=""
                     />
                   )}
                   name="email"
@@ -92,6 +129,7 @@ const Login = () => {
                       eyeVisible={true}
                       passwordVisible={passwordVisible}
                       toggleVisible={handlePasswordVisibleToggle}
+                      defaultText=""
                     />
                   )}
                   name="password"

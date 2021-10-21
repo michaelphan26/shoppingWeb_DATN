@@ -3,6 +3,7 @@ import './style.scss';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 interface Props {
+  defaultText: string;
   type: string;
   placeholder: string;
   onChange: (value: string) => void;
@@ -27,7 +28,7 @@ const SmallTextInput = (props: Props) => {
           event.preventDefault();
           props.onChange(event.target.value);
         }}
-        defaultValue=""
+        defaultValue={props.defaultText}
       />
       {props.eyeVisible ? (
         props.passwordVisible ? (

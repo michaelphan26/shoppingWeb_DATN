@@ -10,6 +10,8 @@ import { MainButton, RoundedQuantityButton } from '../../common/ui/base/button';
 import { Color, NotifyType } from '../../common/util/enum';
 import { toastNotify } from '../../common/ui/base/toast/notify';
 import { FaShoppingCart } from 'react-icons/fa';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../../models/cartReducers';
 
 type ProductState = {
   productItem: ProductItem;
@@ -17,6 +19,7 @@ type ProductState = {
 interface Props extends RouteComponentProps<{}, StaticContext, ProductState> {}
 const Product = (props: Props) => {
   const [quantity, setQuantity] = useState<number>(1);
+  const dispatch = useDispatch();
 
   const increaseQuantity = () => {
     setQuantity(quantity + 1);
@@ -36,6 +39,19 @@ const Product = (props: Props) => {
     if (quantity < 1) {
       toastNotify(NotifyType.warning, 'Bạn chưa chọn hoặc nhập số lượng');
     } else {
+      dispatch(
+        addToCart({
+          cartItem: {
+            id_product: props.location.state.productItem._id,
+            image: props.location.state.productItem.image,
+            name: props.location.state.productItem.name,
+            stock: props.location.state.productItem.stock,
+            price: props.location.state.productItem.price,
+            discount: props.location.state.productItem.discount,
+            quantity: quantity,
+          },
+        })
+      );
       toastNotify(NotifyType.success, 'Thêm vào giỏ hàng thành công');
     }
   };

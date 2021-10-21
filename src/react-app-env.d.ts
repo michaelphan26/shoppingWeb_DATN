@@ -69,3 +69,11 @@ declare module '*.module.sass' {
   const classes: { readonly [key: string]: string };
   export default classes;
 }
+
+export default function persistReducer<S, A extends AnyAction>(
+  config: PersistConfig<S>,
+  baseReducer: Reducer<S, A>
+): Reducer<S & PersistPartial, A>;
+
+
+export type Reducer<S, A extends AnyAction> = (state: S, action: A) => S;

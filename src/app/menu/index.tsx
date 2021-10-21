@@ -6,6 +6,7 @@ import { getProductListFromAPI } from '../../common/util/baseAPI';
 import { ProductItem } from '../../common/util/common';
 import './style.scss';
 import { toastNotify } from '../../common/ui/base/toast/notify';
+import { NotifyType } from '../../common/util/enum';
 
 const Menu = () => {
   const [productList, setProductList] = useState([] as any);
@@ -15,7 +16,7 @@ const Menu = () => {
     if (Object.keys(productListFromAPI).length !== 0) {
       setProductList(productListFromAPI);
     } else {
-      toastNotify('error', 'Không thể lấy danh sách sản phẩm');
+      toastNotify(NotifyType.error, 'Không thể lấy danh sách sản phẩm');
     }
   };
 

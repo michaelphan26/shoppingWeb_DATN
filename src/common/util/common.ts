@@ -14,3 +14,21 @@ export interface ProductItem{
     discount: number;
     status:boolean
 }
+
+export interface CartItem{
+    id_product: string;
+    image: string;
+    name: string;
+    stock: number;
+    price: number;
+    discount: number;
+    quantity: number;
+}
+
+export interface UserInfo{
+  _id:string,
+  name:string,
+  phone:string,
+  address:string,
+  joinDate:string
+}

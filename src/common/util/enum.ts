@@ -21,5 +21,9 @@ export enum Url{
     Home= '/',
     Login = '/login',
     Register = '/register',
-    ProductDetail='/product/:id'
+    ProductDetail = '/product/:id',
+    Profile = '/profile',
+    Cart = '/cart',
+    Logout = '/logout',
+    Checkout = '/checkout',
 }

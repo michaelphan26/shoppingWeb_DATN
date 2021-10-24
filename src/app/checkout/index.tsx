@@ -8,11 +8,15 @@ import numeral from 'numeral';
 import './style.scss';
 import { phoneReg, UserInfo } from '../../common/util/common';
 import SmallMainButton from '../../common/ui/base/button/smallMainButton';
-import { Color, NotifyType } from '../../common/util/enum';
+import { Color, NotifyType, Url } from '../../common/util/enum';
 import { BsCheckLg } from 'react-icons/bs';
 import { toastNotify } from '../../common/ui/base/toast/notify';
 import { useHistory } from 'react-router-dom';
-import { api_url, getUserInfoFromAPI } from '../../common/util/baseAPI';
+import {
+  addReceiptAPI,
+  api_url,
+  getUserInfoFromAPI,
+} from '../../common/util/baseAPI';
 import { Controller, useForm } from 'react-hook-form';
 import { SmallTextInput } from '../../common/ui/base/textInput';
 import axios from 'axios';
@@ -27,41 +31,49 @@ interface ConfirmInfo {
 interface Props {}
 const Checkout = (props: Props) => {
   const cart = useSelector((state: RootState) => state.cartReducer);
+  const accountDetail = useSelector(
+    (state: RootState) => state.accountDetailReducer
+  );
   const account = useSelector((state: RootState) => state.accountReducer);
-  const [userDetail, setUserDetail] = useState<UserInfo>({
-    _id: '',
-    name: '',
-    phone: '',
-    address: '',
-    joinDate: '',
-  });
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm({ reValidateMode: 'onSubmit' });
+  } = useForm({
+    reValidateMode: 'onSubmit',
+    defaultValues: {
+      name: accountDetail.name,
+      phone: accountDetail.phone,
+      address: accountDetail.address,
+      deliveryAddress: '',
+    },
+  });
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const getUserDetailAPI = async () => {
-    const userDetailFromAPI = await getUserInfoFromAPI();
-    if (typeof userDetailFromAPI !== 'string') {
-      setUserDetail(userDetailFromAPI);
-    } else {
-      toastNotify(NotifyType.error, 'Không thể lấy thông tin khách hàng');
-    }
-  };
+  async function pushToAPI() {
+    await addReceiptAPI({
+      productList: cart.productList,
+      total: cart.total,
+    });
+  }
 
   useEffect(() => {
-    getUserDetailAPI();
-  }, []);
+    if (cart.productList.length === 0) {
+      history.push(Url.Cart);
+      toastNotify(NotifyType.error, 'Giỏ hàng trống');
+    } else {
+      pushToAPI();
+    }
+  }, [cart]);
 
   const handleConfirmChecked = async () => {
     if (account.email === '') {
+      console.log('account');
       history.push('/login', { checkingOut: true });
       toastNotify(NotifyType.error, 'Vui lòng đăng nhập để tiếp tục');
     } else {
-      const token = await window.sessionStorage.getItem('@token');
+      const token = await window.sessionStorage.getItem('token');
       // await addReceiptAPI({
       //   productList: cart.productList,
       //   total: cart.total,
@@ -80,7 +92,7 @@ const Checkout = (props: Props) => {
             if (res.data['code'] === 200) {
               dispatch(resetCart());
               toastNotify(NotifyType.success, 'Đặt hàng thành công');
-              // history.push('/order-completed');
+              history.push('/order-completed');
             } else {
               toastNotify(NotifyType.error, 'Đặt hàng thất bại');
             }
@@ -122,11 +134,12 @@ const Checkout = (props: Props) => {
                     eyeVisible={false}
                     passwordVisible={false}
                     toggleVisible={() => {}}
-                    defaultText={userDetail.name}
+                    value={value}
+                    disabled={false}
                   />
                 )}
                 name="name"
-                defaultValue={userDetail.name}
+                defaultValue=""
               />
               {errors.name && <span className="errorText">Tên không đúng</span>}
 
@@ -142,13 +155,14 @@ const Checkout = (props: Props) => {
                     eyeVisible={false}
                     passwordVisible={false}
                     toggleVisible={() => {}}
-                    defaultText={userDetail.phone}
+                    value={value}
+                    disabled={false}
                   />
                 )}
-                name="phoneNumber"
-                defaultValue={userDetail.phone}
+                name="phone"
+                defaultValue=""
               />
-              {errors.phoneNumber && (
+              {errors.phone && (
                 <span className="errorText">
                   Số điện thoại không đúng định dạng
                 </span>
@@ -166,11 +180,12 @@ const Checkout = (props: Props) => {
                     eyeVisible={false}
                     passwordVisible={false}
                     toggleVisible={() => {}}
-                    defaultText={userDetail.address}
+                    value={value}
+                    disabled={false}
                   />
                 )}
                 name="address"
-                defaultValue={userDetail.address}
+                defaultValue=""
               />
               {errors.address && (
                 <span className="errorText">Địa chỉ không đúng</span>
@@ -188,11 +203,12 @@ const Checkout = (props: Props) => {
                     eyeVisible={false}
                     passwordVisible={false}
                     toggleVisible={() => {}}
-                    defaultText={userDetail.address}
+                    value={value}
+                    disabled={false}
                   />
                 )}
                 name="deliveryAddress"
-                defaultValue={userDetail.address}
+                defaultValue=""
               />
               {errors.deliveryAddress && (
                 <span className="errorText">Địa chỉ không đúng</span>

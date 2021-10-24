@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import MainLayout from '../../common/ui/layout/main-layout';
 import Divider from '../../common/ui/base/divider';
@@ -13,6 +13,7 @@ import { Color, NotifyType } from '../../common/util/enum';
 import { BsCheckLg } from 'react-icons/bs';
 import { toastNotify } from '../../common/ui/base/toast/notify';
 import { useHistory } from 'react-router-dom';
+import { addReceiptAPI } from '../../common/util/baseAPI';
 
 interface Props {}
 const Cart = (props: Props) => {
@@ -32,6 +33,17 @@ const Cart = (props: Props) => {
       history.push('/checkout');
     }
   };
+
+  async function pushToAPI() {
+    await addReceiptAPI({
+      productList: cart.productList,
+      total: cart.total,
+    });
+  }
+
+  useEffect(() => {
+    pushToAPI();
+  }, [cart]);
 
   return (
     <MainLayout>

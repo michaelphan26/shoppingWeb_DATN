@@ -32,3 +32,8 @@ export interface UserInfo{
   address:string,
   joinDate:string
 }
+
+export interface CartInterface{
+  productList: [],
+  total:number
+}

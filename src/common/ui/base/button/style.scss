@@ -33,3 +33,15 @@
   justify-content: center;
   font-weight: bold;
 }
+
+.middleMainButton {
+  display: flex;
+  width: 150px;
+  height: 45px;
+  border-radius: 30px;
+  border: none;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.05);
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}

@@ -56,20 +56,30 @@ const Register = (props: Props) => {
       url: '/auth/register',
       baseURL: `${api_url}`,
       method: 'post',
-      data: registerInfo,
+      data: {
+        name: registerInfo.name,
+        email: registerInfo.email,
+        password: registerInfo.password,
+        phone: registerInfo.phoneNumber,
+        address: registerInfo.address,
+      },
       responseType: 'json',
-    }).then((res) => {
-      toastNotify(NotifyType.error, 'Đăng ký tài khoản thất bại');
-      if (res.data['code'] === 200) {
-        dispatch(accountLogin(res.data['data']));
-        window.sessionStorage.setItem('@token', res.headers['x-auth-token']);
-        password.current = undefined;
-        confirmPassword.current = undefined;
-        props.history.push(Url.Home);
-      } else {
+    })
+      .then((res) => {
+        if (res.data['code'] === 200) {
+          dispatch(accountLogin(res.data['data']));
+          window.sessionStorage.setItem('@token', res.headers['x-auth-token']);
+          password.current = undefined;
+          confirmPassword.current = undefined;
+          props.history.push(Url.Home);
+          toastNotify(NotifyType.success, 'Đăng ký tài khoản thành công');
+        } else {
+          toastNotify(NotifyType.error, 'Đăng ký tài khoản thất bại');
+        }
+      })
+      .catch((err) => {
         toastNotify(NotifyType.error, 'Đăng ký tài khoản thất bại');
-      }
-    });
+      });
   };
 
   return (
@@ -103,7 +113,8 @@ const Register = (props: Props) => {
                   eyeVisible={false}
                   passwordVisible={false}
                   toggleVisible={() => {}}
-                  defaultText=""
+                  value={value}
+                  disabled={false}
                 />
               )}
               name="email"
@@ -124,7 +135,8 @@ const Register = (props: Props) => {
                   eyeVisible={true}
                   passwordVisible={passwordVisible}
                   toggleVisible={handlePasswordVisibleToggle}
-                  defaultText=""
+                  value={value}
+                  disabled={false}
                 />
               )}
               name="password"
@@ -150,7 +162,8 @@ const Register = (props: Props) => {
                   eyeVisible={true}
                   passwordVisible={confirmPasswordVisible}
                   toggleVisible={handleConfirmPasswordVisibleToggle}
-                  defaultText=""
+                  value={value}
+                  disabled={false}
                 />
               )}
               name="confirmPassword"
@@ -171,7 +184,8 @@ const Register = (props: Props) => {
                   eyeVisible={false}
                   passwordVisible={false}
                   toggleVisible={() => {}}
-                  defaultText=""
+                  value={value}
+                  disabled={false}
                 />
               )}
               name="name"
@@ -195,7 +209,8 @@ const Register = (props: Props) => {
                   eyeVisible={false}
                   passwordVisible={false}
                   toggleVisible={() => {}}
-                  defaultText=""
+                  value={value}
+                  disabled={false}
                 />
               )}
               name="phoneNumber"
@@ -218,7 +233,8 @@ const Register = (props: Props) => {
                   eyeVisible={false}
                   passwordVisible={false}
                   toggleVisible={() => {}}
-                  defaultText=""
+                  value={value}
+                  disabled={false}
                 />
               )}
               name="address"

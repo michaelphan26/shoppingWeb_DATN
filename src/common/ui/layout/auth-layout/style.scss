@@ -8,6 +8,19 @@
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.05);
 }
 
+.small-auth-card-view {
+  width: 50vw;
+  min-height: 70vh;
+  margin-left: 0;
+  margin-right: 0;
+  border-radius: 30px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: center;
+  justify-items: center;
+  align-items: center;
+}
+
 .center-layout {
   position: absolute;
   width: 100vw;

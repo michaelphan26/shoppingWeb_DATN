@@ -7,7 +7,10 @@ import Register from '../app/auth/register';
 import Cart from '../app/cart';
 import Checkout from '../app/checkout';
 import Menu from '../app/menu';
+import OrderCompleted from '../app/order-completed';
 import Product from '../app/product';
+import Profile from '../app/profile';
+import Search from '../app/search';
 import { Url } from '../common/util/enum';
 
 const Routes = () => {
@@ -21,6 +24,9 @@ const Routes = () => {
           <Route path={Url.ProductDetail} component={Product} />
           <Route exact path={Url.Cart} component={Cart} />
           <Route exact path={Url.Checkout} component={Checkout} />
+          <Route exact path={Url.OrderCompleted} component={OrderCompleted} />
+          <Route exact path={Url.Profile} component={Profile} />
+          <Route path={Url.Search} component={Search} />
         </Switch>
       </Router>
     </div>

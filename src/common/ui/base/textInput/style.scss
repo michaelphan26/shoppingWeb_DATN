@@ -21,6 +21,9 @@
 .smallTextInput:focus {
   outline: none;
 }
+.smallTextInput:disabled {
+  background-color: white;
+}
 
 .largeTextInputContainer {
   width: 70%;
@@ -45,9 +48,23 @@
 .largeTextInput:focus {
   outline: none;
 }
+.largeTextInput:disabled {
+  background-color: white;
+}
 
 .registerText {
   color: black;
   font-weight: bold;
   text-decoration: underline;
+}
+
+.searchTextInput {
+  width: 100%;
+  height: 8%;
+  border-radius: 20px;
+  border: none;
+  padding: 10px 15px;
+  color: black;
+  font-weight: bold;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.05);
 }

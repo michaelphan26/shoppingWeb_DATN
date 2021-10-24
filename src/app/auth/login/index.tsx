@@ -11,12 +11,13 @@ import { Color, NotifyType } from '../../../common/util/enum';
 import { Controller, useForm } from 'react-hook-form';
 import { emailReg } from '../../../common/util/common';
 import axios from 'axios';
-import { api_url } from '../../../common/util/baseAPI';
+import { api_url, getUserDetailUrl } from '../../../common/util/baseAPI';
 import CheckBox from '../../../common/ui/base/checkbox';
 import { Url } from '../../../common/util/enum';
 import { useDispatch } from 'react-redux';
 import { accountLogin } from '../../../models/accountReducers';
 import { toastNotify } from '../../../common/ui/base/toast/notify';
+import { addAccountDetail } from '../../../models/accountDetailReducers';
 
 interface LoginInfo {
   email: string;
@@ -53,6 +54,31 @@ const Login = (props: Props) => {
       .then(async (res) => {
         if (res.data['code'] === 200) {
           dispatch(accountLogin(res.data['data']));
+          const token = res.headers['x-auth-token'] as string;
+          await axios({
+            url: `${getUserDetailUrl}`,
+            baseURL: `${api_url}`,
+            method: 'get',
+            headers: {
+              'x-auth-token': token,
+            },
+          })
+            .then((detailResponse) => {
+              if (detailResponse.data['code'] === 200) {
+                dispatch(addAccountDetail(detailResponse.data['data']));
+              } else {
+                toastNotify(
+                  NotifyType.error,
+                  'Lấy thông tin tài khoản thất bại'
+                );
+              }
+            })
+            .catch((error) => {
+              toastNotify(
+                NotifyType.error,
+                'Không thể lấy thông tin tài khoản'
+              );
+            });
           if (remember) {
             await localStorage.setItem(
               'token',
@@ -109,7 +135,8 @@ const Login = (props: Props) => {
                       eyeVisible={false}
                       passwordVisible={false}
                       toggleVisible={() => {}}
-                      defaultText=""
+                      disabled={false}
+                      value={value}
                     />
                   )}
                   name="email"
@@ -129,7 +156,8 @@ const Login = (props: Props) => {
                       eyeVisible={true}
                       passwordVisible={passwordVisible}
                       toggleVisible={handlePasswordVisibleToggle}
-                      defaultText=""
+                      value={value}
+                      disabled={false}
                     />
                   )}
                   name="password"

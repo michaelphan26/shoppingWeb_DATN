@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { ProductItem, UserInfo } from './common';
+import { CartInterface, ProductItem, UserInfo } from './common';
 
-export const api_url = 'http://192.168.1.13:5000/api';
+export const api_url = 'http://192.168.1.15:5000/api';
 
 export const productListUrl = 'product/product-list';
 export const productDetailUrl = 'product/product-detail';
@@ -75,5 +75,27 @@ export async function getUserInfoFromAPI() {
   else {
     const msg = "No token";
     return msg;
+  }
+}
+
+export async function addReceiptAPI(cart:CartInterface) {
+  const token = await window.sessionStorage.getItem("@token");
+  if (token) {
+    await axios({
+      url: 'receipt/add-receipt',
+      baseURL: `${api_url}`,
+      method: 'post',
+      headers: {
+        "x-auth-token":token  
+      },
+      data:cart,
+      responseType:'json'
+    }).then(res => {
+      if (res.data['code'] !== 200) {
+        return res.data['message'] as string;
+      }
+    }).catch(err => {
+      return err.response.data['message'] as string
+    })
   }
 }

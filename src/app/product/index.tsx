@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Col, Row, Container, ListGroup } from 'react-bootstrap';
 import { RouteComponentProps, StaticContext } from 'react-router';
 import { Link } from 'react-router-dom';
@@ -12,6 +12,7 @@ import { toastNotify } from '../../common/ui/base/toast/notify';
 import { FaShoppingCart } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../../models/cartReducers';
+import { addReceiptAPI } from '../../common/util/baseAPI';
 
 type ProductState = {
   productItem: ProductItem;
@@ -20,6 +21,7 @@ interface Props extends RouteComponentProps<{}, StaticContext, ProductState> {}
 const Product = (props: Props) => {
   const [quantity, setQuantity] = useState<number>(1);
   const dispatch = useDispatch();
+  const cart = useSelector((state: RootState) => state.cartReducers);
 
   const increaseQuantity = () => {
     setQuantity(quantity + 1);
@@ -34,6 +36,17 @@ const Product = (props: Props) => {
   const handleQuantityInputChange = (event) => {
     setQuantity(parseInt(event.target.value));
   };
+
+  async function pushToAPI() {
+    await addReceiptAPI({
+      productList: cart.productList,
+      total: cart.total,
+    });
+  }
+
+  useEffect(() => {
+    pushToAPI();
+  }, [cart]);
 
   const handleAddToCart = () => {
     if (quantity < 1) {

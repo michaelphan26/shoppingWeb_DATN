@@ -10,7 +10,7 @@ import { MainButton, RoundedQuantityButton } from '../../common/ui/base/button';
 import { Color, NotifyType } from '../../common/util/enum';
 import { toastNotify } from '../../common/ui/base/toast/notify';
 import { FaShoppingCart } from 'react-icons/fa';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../../models/cartReducers';
 import { addReceiptAPI } from '../../common/util/baseAPI';
 

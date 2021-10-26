@@ -27,5 +27,9 @@ export enum Url{
     Logout = '/logout',
     Checkout = '/checkout',
     OrderCompleted = '/order-completed',
-    Search='/search'
+    Search = '/search',
+    Category = '/category',
+    Contact = '/contact',
+    Support = '/support',
+    Receipt='/receipt'
 }

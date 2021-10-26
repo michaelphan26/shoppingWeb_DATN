@@ -42,3 +42,16 @@
   width: 50px;
   object-fit: contain;
 }
+
+.receiptItem {
+  margin-top: 35px;
+  margin-bottom: 10px;
+}
+
+.spanOverflow {
+  display: block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  text-align: center;
+}

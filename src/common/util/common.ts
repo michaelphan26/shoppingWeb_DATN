@@ -37,3 +37,29 @@ export interface CartInterface{
   productList: [],
   total:number
 }
+
+export interface ReceiptInterface{
+  _id: string,
+  date: string,
+  total: number,
+  id_user: string,
+  id_receiptType: string,
+}
+
+export const initialReceiptInterface = {
+  _id: '',
+  date: '',
+  total: 0,
+  id_user: '',
+  id_receiptType: '',
+}
+
+export interface JustNameItemInterface{
+  _id: string,
+  name:string,
+}
+
+export const initialJustNameItem = {
+  _id: '',
+  name:''
+}

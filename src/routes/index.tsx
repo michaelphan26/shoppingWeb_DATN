@@ -10,6 +10,7 @@ import Menu from '../app/menu';
 import OrderCompleted from '../app/order-completed';
 import Product from '../app/product';
 import Profile from '../app/profile';
+import Receipt from '../app/receipt';
 import Search from '../app/search';
 import { Url } from '../common/util/enum';
 
@@ -27,6 +28,7 @@ const Routes = () => {
           <Route exact path={Url.OrderCompleted} component={OrderCompleted} />
           <Route exact path={Url.Profile} component={Profile} />
           <Route path={Url.Search} component={Search} />
+          <Route exact path={Url.Receipt} component={Receipt} />
         </Switch>
       </Router>
     </div>

@@ -17,7 +17,6 @@ import { FaUserAlt, FaShoppingCart, FaSearch } from 'react-icons/fa';
 import { HiMenuAlt2 } from 'react-icons/hi';
 import { useDispatch, useSelector } from 'react-redux';
 import { RouteComponentProps, useHistory } from 'react-router';
-import Sidebar from 'react-sidebar';
 import { accountLogout } from '../../../../../models/accountReducers';
 import { RootState } from '../../../../../models/store';
 import { Color, NotifyType, Url } from '../../../../util/enum';
@@ -29,14 +28,17 @@ import { SmallMainButton } from '../../../base/button';
 import axios from 'axios';
 import { api_url } from '../../../../util/baseAPI';
 import SearchTextInput from '../../../base/textInput/searchTextInput';
+import Sidebar from 'react-sidebar';
 
 interface ChangePasswordInfo {
   oldPassword: string;
   newPassword: string;
   confirmPassword: string;
 }
-const Header = () => {
-  const [sideBarOpen, setSideBarOpen] = useState(false);
+interface Props {
+  toggleSidebar: (event) => void;
+}
+const Header = (props: Props) => {
   const account = useSelector((state: RootState) => state.accountReducer);
   const cart = useSelector((state: RootState) => state.cartReducer);
   const dispatch = useDispatch();
@@ -86,10 +88,6 @@ const Header = () => {
     setValue('confirmNewPassword', '');
   };
 
-  const toggleSideBarOpen = () => {
-    setSideBarOpen(!sideBarOpen);
-  };
-
   const handleLogout = () => {
     dispatch(accountLogout({}));
     window.sessionStorage.setItem('@token', '');
@@ -100,9 +98,7 @@ const Header = () => {
   const handleSubmitChangePassword = async (
     passwordInfo: ChangePasswordInfo
   ) => {
-    console.log('hello');
     const token = await window.sessionStorage.getItem('token');
-    console.log(token);
     if (token && account.email !== '') {
       await axios({
         url: 'auth/change-password',
@@ -163,13 +159,11 @@ const Header = () => {
     });
   };
 
+  const toggleSideBarOpen = (event) => {
+    props.toggleSidebar(event);
+  };
+
   return (
-    // <Sidebar
-    //   sidebar={<b>Sidebar content</b>}
-    //   open={sideBarOpen}
-    //   onSetOpen={toggleSideBarOpen}
-    //   styles={{ sidebar: { background: 'white' } }}
-    // >
     <div className="header">
       <Navbar
         bg="light"
@@ -183,9 +177,9 @@ const Header = () => {
             size={30}
             color="black"
             style={{ marginRight: 20 }}
-            onClick={toggleSideBarOpen}
+            onClick={(event) => toggleSideBarOpen(event)}
           />
-          Welcome to our shop
+          E shop
         </Navbar.Brand>
         <Container>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -231,6 +225,9 @@ const Header = () => {
                 >
                   <NavDropdown.Item href={Url.Profile}>
                     Thông tin tài khoản
+                  </NavDropdown.Item>
+                  <NavDropdown.Item href={Url.Receipt}>
+                    Danh sách hóa đơn
                   </NavDropdown.Item>
                   <NavDropdown.Item onClick={handleModalOpen}>
                     Đổi mật khẩu
@@ -292,7 +289,6 @@ const Header = () => {
                     eyeVisible={true}
                     passwordVisible={oldPasswordVisible}
                     toggleVisible={handleOldPasswordVisibleToggle}
-                    defaultText=""
                     disabled={false}
                     value={value}
                   />
@@ -320,7 +316,6 @@ const Header = () => {
                     eyeVisible={true}
                     passwordVisible={newPasswordVisible}
                     toggleVisible={handleNewPasswordVisibleToggle}
-                    defaultText=""
                     disabled={false}
                     value={value}
                   />
@@ -348,7 +343,6 @@ const Header = () => {
                     eyeVisible={true}
                     passwordVisible={confirmPasswordVisible}
                     toggleVisible={handleConfirmPasswordVisibleToggle}
-                    defaultText=""
                     disabled={false}
                     value={value}
                   />
@@ -389,7 +383,6 @@ const Header = () => {
         </Modal.Body>
       </Modal>
     </div>
-    // </Sidebar>
   );
 };
 

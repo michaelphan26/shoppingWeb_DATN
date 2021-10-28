@@ -15,6 +15,19 @@ export interface ProductItem{
     status:boolean
 }
 
+export const initialProductItem:ProductItem={
+    _id: '',
+    name: '',
+    brand: '',
+    id_category: '',
+    price: 0,
+    description: '',
+    image: '',
+    stock: 0,
+    discount: 0,
+    status:false
+}
+
 export interface CartItem{
     id_product: string;
     image: string;
@@ -62,4 +75,13 @@ export interface JustNameItemInterface{
 export const initialJustNameItem = {
   _id: '',
   name:''
+}
+
+export interface ReceiptDetailInterface{
+  _id: string,
+  discount: number,
+  id_product: string,
+  id_receipt: string,
+  price: number,
+  quantity: number
 }

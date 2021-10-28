@@ -13,6 +13,7 @@ import { FaShoppingCart } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../../models/cartReducers';
 import { addReceiptAPI } from '../../common/util/baseAPI';
+import { RootState } from '../../models/store';
 
 type ProductState = {
   productItem: ProductItem;

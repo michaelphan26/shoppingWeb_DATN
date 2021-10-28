@@ -7,6 +7,7 @@ import { toastNotify } from '../../common/ui/base/toast/notify';
 import MainLayout from '../../common/ui/layout/main-layout';
 import ReceiptItemView from '../../common/ui/layout/main-layout/components/receiptItemView';
 import {
+  getReceiptDetailFromAPI,
   getReceiptListFromAPI,
   getReceiptTypeListFromAPI,
 } from '../../common/util/baseAPI';
@@ -15,15 +16,18 @@ import {
   JustNameItemInterface,
   ReceiptInterface,
   initialJustNameItem,
+  ReceiptDetailInterface,
 } from '../../common/util/common';
 import { NotifyType, Url } from '../../common/util/enum';
 import { RootState } from '../../models/store';
 import './style.scss';
 import numeral from 'numeral';
+import ReceiptDetailItemView from './receiptDetailItemView';
 
 const Receipt = () => {
   const [receiptList, setReceiptList] = useState([] as any);
   const [receiptTypeList, setReceiptTypeList] = useState([] as any);
+  const [receiptDetailList, setReceiptDetailList] = useState([] as any);
   const [receipt, setReceipt] = useState<ReceiptInterface>(
     initialReceiptInterface
   );
@@ -54,6 +58,15 @@ const Receipt = () => {
     }
   };
 
+  const getReceiptDetailList = async (receiptId: string) => {
+    const receiptDetailFromAPI = await getReceiptDetailFromAPI(receiptId);
+    if (Object.keys(receiptDetailFromAPI).length !== 0) {
+      setReceiptDetailList(receiptDetailFromAPI);
+    } else {
+      toastNotify(NotifyType.error, 'Không thể lấy thông tin chi tiết hóa đơn');
+    }
+  };
+
   const tokenCheck = async () => {
     const token = window.sessionStorage.getItem('token');
     if (!token) {
@@ -69,12 +82,13 @@ const Receipt = () => {
     tokenCheck();
   }, []);
 
-  const handleModalOpen = (
+  const handleModalOpen = async (
     receipt: ReceiptInterface,
     receiptType: JustNameItemInterface
   ) => {
     setReceipt(receipt);
     setReceiptType(receiptType);
+    await getReceiptDetailList(receipt._id);
     setModalShow(true);
   };
 
@@ -176,6 +190,52 @@ const Receipt = () => {
           <br />
           <span>Địa chỉ: {accountDetail.address}</span>
           <Divider />
+          <Row>
+            <Col sm={2}></Col>
+            <Col
+              sm={3}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <span>Tên sản phẩm</span>
+            </Col>
+            <Col
+              sm={3}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <span>Thành tiền</span>
+            </Col>
+            <Col
+              sm={2}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <span>Giảm giá</span>
+            </Col>
+            <Col
+              sm={1}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <span>SL</span>
+            </Col>
+          </Row>
+          {receiptDetailList.map((item: ReceiptDetailInterface) => {
+            return <ReceiptDetailItemView receiptDetail={item} />;
+          })}
         </Modal.Body>
       </Modal>
     </MainLayout>

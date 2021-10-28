@@ -31,6 +31,21 @@
   color: black;
 }
 
+.categoryCard {
+  display: flex;
+  height: 14vw;
+  width: 12vw;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.05);
+  margin: 10px;
+  align-items: center;
+  text-align: center;
+  padding: 10px;
+  color: black;
+}
+
 .imgStyle {
   height: 45%;
   width: 45%;
@@ -54,4 +69,20 @@
   white-space: nowrap;
   overflow: hidden;
   text-align: center;
+  text-decoration: none;
+  color: black;
+}
+
+.spanOverflowLeft {
+  display: block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  text-align: left;
+  text-decoration: none;
+  color: black;
+}
+
+a.dropdown-item:focus {
+  background-color: $light-blue; // for font color of individual drop down item
 }

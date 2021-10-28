@@ -28,7 +28,6 @@ import { SmallMainButton } from '../../../base/button';
 import axios from 'axios';
 import { api_url } from '../../../../util/baseAPI';
 import SearchTextInput from '../../../base/textInput/searchTextInput';
-import Sidebar from 'react-sidebar';
 
 interface ChangePasswordInfo {
   oldPassword: string;

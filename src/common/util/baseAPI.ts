@@ -8,6 +8,8 @@ export const productDetailUrl = 'product/product-detail';
 export const getUserDetailUrl = '/user/me';
 export const receiptListUrl = 'receipt/receipt-list';
 export const receiptTypeListUrl = 'receipt-type/get-list';
+export const receiptDetailUrl = 'receipt/receipt-detail';
+export const categoryListUrl = 'category/category-list';
 
 export async function getProductListFromAPI():Promise<string|any> {
   let productList= [] as any;
@@ -128,7 +130,7 @@ export async function getReceiptListFromAPI() {
 }
 
 export async function getReceiptTypeListFromAPI(){
-const token = await window.sessionStorage.getItem("token");
+  const token = await window.sessionStorage.getItem("token");
   let receiptTypeList = [] as any;
   if (token) {
     await axios({
@@ -151,4 +153,72 @@ const token = await window.sessionStorage.getItem("token");
     return receiptTypeList;
   }
   
+}
+
+export async function getReceiptDetailFromAPI(_id:string){
+  const token = await window.sessionStorage.getItem("token");
+  let receiptDetailList = [] as any;
+  if (token) {
+    await axios({
+    url: `${receiptDetailUrl}/${_id}`,
+    baseURL: `${api_url}`,
+    method: 'get',
+    headers: {
+      "x-auth-token":token
+    },
+    responseType:'json',
+  }).then(res => {
+    if (res.data['code'] === 200) {
+      receiptDetailList = res.data['data'];
+    }
+    else return res.data['message']
+  }).catch(err => {
+    return err.response.data['message'];
+  })
+
+  return receiptDetailList;
+  }
+  
+}
+
+export async function getCategoryListFromAPI() {
+  let categoryList = [] as any;
+  await axios({
+      url: `${categoryListUrl}`,
+      method: 'get',
+      baseURL: `${api_url}`,
+      responseType: 'json',
+    })
+      .then((res) => {
+        if (res.data['code'] === 200) {
+          categoryList = res.data['data'];
+        }
+        else return res.data['message'] as string
+      })
+      .catch((err) => {
+        return err.response.data['message'] as string
+      });
+  return categoryList;
+}
+
+export async function getProductByCategoryFromAPI(id_category:string) {
+  let productList = [] as any;
+  await axios({
+      url: `/category/get-product-list/${id_category}`,
+      baseURL: `${api_url}`,
+      method: 'get',
+      responseType: 'json',
+    })
+      .then((res) => {
+        if (res.data['code'] === 200) {
+          productList=res.data['data']
+        }
+        else {
+          return res.data['message'] as string;
+        }
+      })
+      .catch((err) => {
+        return err.response.data['message'] as string;
+      });
+  return productList;
 }

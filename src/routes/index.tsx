@@ -1,10 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
-import App from '../App';
 import Login from '../app/auth/login';
 import Register from '../app/auth/register';
 import Cart from '../app/cart';
+import Category from '../app/category';
 import Checkout from '../app/checkout';
 import Menu from '../app/menu';
 import OrderCompleted from '../app/order-completed';
@@ -29,6 +28,7 @@ const Routes = () => {
           <Route exact path={Url.Profile} component={Profile} />
           <Route path={Url.Search} component={Search} />
           <Route exact path={Url.Receipt} component={Receipt} />
+          <Route path={Url.Category} component={Category} />
         </Switch>
       </Router>
     </div>

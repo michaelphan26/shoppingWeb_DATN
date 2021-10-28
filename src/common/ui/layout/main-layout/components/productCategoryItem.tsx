@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 interface Props {
   productItem: ProductItem;
 }
-const ProductCardItem = (props: Props) => {
+const ProductCategoryItem = (props: Props) => {
   return (
     <Link
       to={{
@@ -17,7 +17,7 @@ const ProductCardItem = (props: Props) => {
       }}
       style={{ textDecoration: 'none' }}
     >
-      <Card className="productCard">
+      <Card className="categoryCard">
         <Card.Img
           src={'data:image/png;base64,' + props.productItem.image}
           className="imgStyle"
@@ -25,9 +25,9 @@ const ProductCardItem = (props: Props) => {
         />
         <Card.Body>
           <Card.Title as="div">
-            <strong>{props.productItem.name}</strong>
+            <span>{props.productItem.name}</span>
           </Card.Title>
-          <Card.Text as="h5">
+          <Card.Text as="h6">
             {numeral(props.productItem.price).format(0, 0)}đ
           </Card.Text>
         </Card.Body>
@@ -36,4 +36,4 @@ const ProductCardItem = (props: Props) => {
   );
 };
 
-export default ProductCardItem;
+export default ProductCategoryItem;

@@ -31,5 +31,5 @@ export enum Url{
     Category = '/category',
     Contact = '/contact',
     Support = '/support',
-    Receipt='/receipt'
+    Receipt = '/receipt',
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { HiHome } from 'react-icons/hi';
-import { IoMdPricetag } from 'react-icons/io';
+import { BiCategory } from 'react-icons/bi';
 import { RiContactsBookFill } from 'react-icons/ri';
 import { HiQuestionMarkCircle } from 'react-icons/hi';
 import { Url } from '../../../../util/enum';
@@ -14,7 +14,7 @@ export const SidebarData = [
   {
     title: 'Danh mục',
     link: Url.Category,
-    icon: <IoMdPricetag size={20} />,
+    icon: <BiCategory size={20} />,
   },
   {
     title: 'Liên hệ',

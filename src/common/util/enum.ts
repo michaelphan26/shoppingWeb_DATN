@@ -32,4 +32,15 @@ export enum Url{
     Contact = '/contact',
     Support = '/support',
     Receipt = '/receipt',
+    AdminDashboard = '/admin/dashboard',
+    AdminCategory = '/admin/category',
+    AdminProduct = '/admin/product',
+    AdminAccount = '/admin/account',
+    AdminRole = '/admin/role',
+    AdminReceipt = '/admin/receipt',
+    AdminReceiptType = '/admin/receipt-type',
+    AdminIO = '/admin/io',
+    AdminIOType = '/admin/io-type',
+    AdminCompany = '/admin/company',
+    AdminStatistic ='/admin/statistic'
 }

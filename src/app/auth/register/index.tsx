@@ -68,7 +68,7 @@ const Register = (props: Props) => {
       .then((res) => {
         if (res.data['code'] === 200) {
           dispatch(accountLogin(res.data['data']));
-          window.sessionStorage.setItem('@token', res.headers['x-auth-token']);
+          window.sessionStorage.setItem('token', res.headers['x-auth-token']);
           password.current = undefined;
           confirmPassword.current = undefined;
           props.history.push(Url.Home);

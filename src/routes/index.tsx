@@ -1,5 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import AdminCategory from '../app/admin/category';
+import AdminCompany from '../app/admin/company';
+import AdminDashboard from '../app/admin/dashboard';
+import AdminIOType from '../app/admin/ioType';
+import AdminReceiptType from '../app/admin/receiptType';
+import AdminRole from '../app/admin/role';
 import Login from '../app/auth/login';
 import Register from '../app/auth/register';
 import Cart from '../app/cart';
@@ -29,6 +35,17 @@ const Routes = () => {
           <Route path={Url.Search} component={Search} />
           <Route exact path={Url.Receipt} component={Receipt} />
           <Route path={Url.Category} component={Category} />
+
+          <Route exact path={Url.AdminDashboard} component={AdminDashboard} />
+          <Route exact path={Url.AdminCategory} component={AdminCategory} />
+          <Route
+            exact
+            path={Url.AdminReceiptType}
+            component={AdminReceiptType}
+          />
+          <Route exact path={Url.AdminIOType} component={AdminIOType} />
+          <Route exact path={Url.AdminRole} component={AdminRole} />
+          <Route exact path={Url.AdminCompany} component={AdminCompany} />
         </Switch>
       </Router>
     </div>

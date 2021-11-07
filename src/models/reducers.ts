@@ -6,7 +6,7 @@ import cartReducers from "./cartReducers";
 const Reducers = combineReducers({
     accountReducer: accountReducers,
     cartReducer: cartReducers,
-    accountDetailReducer:accountDetailReducers,
+    accountDetailReducer: accountDetailReducers,
 })
 
 export default Reducers;

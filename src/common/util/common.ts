@@ -38,6 +38,14 @@ export interface CartItem{
     quantity: number;
 }
 
+export interface UserInterface{
+  _id:string,
+  email: string,
+  id_userInfo: string,
+  id_role: string,
+  role_name: string,
+}
+
 export interface UserInfo{
   _id:string,
   name:string,
@@ -84,4 +92,27 @@ export interface ReceiptDetailInterface{
   id_receipt: string,
   price: number,
   quantity: number
+}
+
+export interface SummaryItemInterface{
+  id: string,
+  title: string
+  count: number
+  color: string
+}
+
+export interface CompanyInterface{
+  _id: string,
+  name: string,
+  address: string,
+  phone: string,
+  tax_number: string
+}
+
+export const initialCompanyItem={
+  _id: '',
+  name: '',
+  phone: '',
+  address: '',
+  tax_number:''
 }

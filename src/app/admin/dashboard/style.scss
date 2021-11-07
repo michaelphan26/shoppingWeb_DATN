@@ -1,0 +1,15 @@
+.summaryCard {
+  display: flex;
+  height: 10vw;
+  width: 20vw;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.05);
+  margin: 10px;
+  align-items: center;
+  justify-items: center;
+  text-align: center;
+  padding: 10px;
+  font-size: large;
+}

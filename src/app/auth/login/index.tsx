@@ -18,6 +18,7 @@ import { useDispatch } from 'react-redux';
 import { accountLogin } from '../../../models/accountReducers';
 import { toastNotify } from '../../../common/ui/base/toast/notify';
 import { addAccountDetail } from '../../../models/accountDetailReducers';
+import { roleOnLogin } from '../../../models/accountRoleReducer';
 
 interface LoginInfo {
   email: string;
@@ -79,6 +80,7 @@ const Login = (props: Props) => {
                 'Không thể lấy thông tin tài khoản'
               );
             });
+
           if (remember) {
             await localStorage.setItem(
               'token',

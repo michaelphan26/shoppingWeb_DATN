@@ -1,47 +1,35 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Navbar,
-  Nav,
-  Container,
-  Form,
-  FormControl,
-  Button,
   NavDropdown,
-  Badge,
-  Modal,
-  Row,
   Col,
+  Row,
+  Modal,
+  Container,
+  Nav,
 } from 'react-bootstrap';
-import { useForm } from 'react-hook-form';
-import { FaUserAlt, FaShoppingCart, FaSearch } from 'react-icons/fa';
-import { HiMenuAlt2 } from 'react-icons/hi';
+import { useForm, Controller } from 'react-hook-form';
+import { FaUserAlt } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
-import { RouteComponentProps, useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import { accountLogout } from '../../../../../models/accountReducers';
 import { RootState } from '../../../../../models/store';
-import { Color, NotifyType, Url } from '../../../../util/enum';
+import { NotifyType, Url } from '../../../../util/enum';
 import { toastNotify } from '../../../base/toast/notify';
-import '../style.scss';
-import { Controller } from 'react-hook-form';
-import { SmallTextInput } from '../../../base/textInput';
-import { SmallMainButton } from '../../../base/button';
 import axios from 'axios';
+import SmallMainButton from '../../../base/button/smallMainButton';
+import '../style.scss';
+import { SmallTextInput } from '../../../base/textInput';
+import { Color } from '../../../../util/enum';
 import { api_url } from '../../../../util/baseAPI';
-import SearchTextInput from '../../../base/textInput/searchTextInput';
 
 interface ChangePasswordInfo {
   oldPassword: string;
   newPassword: string;
   confirmPassword: string;
 }
-interface Props {
-  toggleSidebar: (event) => void;
-}
-const Header = (props: Props) => {
+const Header = () => {
   const account = useSelector((state: RootState) => state.accountReducer);
-  const cart = useSelector((state: RootState) => state.cartReducer);
-  const dispatch = useDispatch();
-  const history = useHistory();
   const [modalShow, setModalShow] = useState<boolean>(false);
   const {
     control,
@@ -59,23 +47,8 @@ const Header = (props: Props) => {
   oldPassword.current = watch('oldPassword', '');
   const newPassword = useRef();
   newPassword.current = watch('newPassword', '');
-  const [searchText, setSearchText] = useState<string>('');
-
-  const tokenCheck = async () => {
-    const sessionToken = await window.sessionStorage.getItem('token');
-    if (!sessionToken) {
-      const savedToken = await localStorage.getItem('token');
-      if (savedToken) {
-        await window.sessionStorage.setItem('token', savedToken);
-      } else {
-        dispatch(accountLogout({}));
-      }
-    }
-  };
-
-  useEffect(() => {
-    tokenCheck();
-  });
+  const dispatch = useDispatch();
+  const history = useHistory();
 
   const resetValue = () => {
     setOldPasswordVisible(false);
@@ -147,114 +120,42 @@ const Header = (props: Props) => {
     setModalShow(true);
   };
 
-  const handleSearchText = (text: string) => {
-    setSearchText(text);
-  };
-
-  const handleSearchPressed = () => {
-    history.push({
-      pathname: Url.Search,
-      search: `${searchText}`,
-    });
-  };
-
-  const toggleSideBarOpen = (event) => {
-    props.toggleSidebar(event);
-  };
-
   return (
     <div className="header">
       <Navbar
-        bg="light"
-        variant="light"
+        bg="dark"
+        variant="dark"
         expand="lg"
         collapseOnSelect
-        className="shadow-sm py-3 px-4 mb-3 bg-white rounded"
+        className="shadow-sm py-3 px-4 bg-dark"
       >
-        <Navbar.Brand href="/">
-          <HiMenuAlt2
-            size={30}
-            color="black"
-            style={{ marginRight: 20 }}
-            onClick={(event) => toggleSideBarOpen(event)}
-          />
-          E shop
+        <Navbar.Brand>
+          <div style={{ width: '20px' }}></div>
         </Navbar.Brand>
+        <Navbar.Brand href={`${Url.AdminDashboard}`}>Admin</Navbar.Brand>
         <Container>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <div style={{ width: '40vw' }}>
-            <SearchTextInput
-              placeholder="Tìm kiếm"
-              onChange={handleSearchText}
-              toggleSearch={handleSearchPressed}
-            />
-          </div>
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
-              {account.email === '' ? (
-                <Nav.Link href={Url.Login}>
-                  <FaUserAlt
-                    size={14}
-                    style={{ marginRight: 6 }}
-                    color="black"
-                  />
-                  <span style={{ color: 'black' }}>Login</span>
-                </Nav.Link>
-              ) : (
-                <NavDropdown
-                  title={
-                    <>
-                      <FaUserAlt
-                        size={14}
-                        style={{ marginRight: 6 }}
-                        color="black"
-                      />
-                      <span style={{ color: 'black' }}>
-                        Hi, {account.email}
-                      </span>{' '}
-                    </>
-                  }
-                  id="dropdown-menu-right pull-right"
-                >
-                  {account.role_name.toLowerCase() === 'admin' ||
-                  account.role_name.toLowerCase() === 'quản trị' ? (
-                    <NavDropdown.Item href={Url.AdminDashboard}>
-                      Trang quản trị
-                    </NavDropdown.Item>
-                  ) : (
-                    <> </>
-                  )}
-                  <NavDropdown.Item href={Url.Profile}>
-                    Thông tin tài khoản
-                  </NavDropdown.Item>
-                  <NavDropdown.Item href={Url.Receipt}>
-                    Danh sách hóa đơn
-                  </NavDropdown.Item>
-                  <NavDropdown.Item onClick={handleModalOpen}>
-                    Đổi mật khẩu
-                  </NavDropdown.Item>
-                  <NavDropdown.Item onClick={handleLogout}>
-                    Đăng xuất
-                  </NavDropdown.Item>
-                </NavDropdown>
-              )}
-              <Nav.Link href={Url.Cart}>
-                <FaShoppingCart
-                  size={14}
-                  style={{ marginRight: 6 }}
-                  color="black"
-                />
-                <span style={{ color: 'black' }}>Cart</span>
-                <Badge
-                  bg="cartBadge"
-                  style={{
-                    marginLeft: '5px',
-                    backgroundColor: `${Color.pink}`,
-                  }}
-                >
-                  {cart.productList.length}
-                </Badge>
-              </Nav.Link>
+              <NavDropdown
+                title={
+                  <>
+                    <FaUserAlt
+                      size={14}
+                      style={{ marginRight: 6 }}
+                      color="white"
+                    />
+                    <span style={{ color: 'white' }}>Hi, {account.email}</span>{' '}
+                  </>
+                }
+                id="dropdown-menu-right pull-right"
+              >
+                <NavDropdown.Item onClick={handleModalOpen}>
+                  Đổi mật khẩu
+                </NavDropdown.Item>
+                <NavDropdown.Item onClick={handleLogout}>
+                  Đăng xuất
+                </NavDropdown.Item>
+              </NavDropdown>
             </Nav>
           </Navbar.Collapse>
         </Container>

@@ -1,0 +1,19 @@
+.header {
+  font-weight: bold;
+  margin-bottom: 0px;
+}
+
+.body {
+  min-height: 80vh;
+  font-weight: bold;
+  color: black;
+}
+
+.sidebar {
+  position: absolute;
+  left: 0;
+  max-width: 15vw;
+  height: 80%;
+  background-color: black;
+  color: white;
+}

@@ -149,6 +149,7 @@ const AdminIOType = () => {
           <ManageButtonsRow
             refreshButtonPressed={handleRefreshPressed}
             addButtonPressed={handleAddPressed}
+            addButtonVisible={true}
           />
         </Col>
       </Row>

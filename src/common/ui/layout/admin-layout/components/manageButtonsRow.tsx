@@ -5,6 +5,7 @@ import { SmallMainButton } from '../../../base/button';
 import { HiRefresh } from 'react-icons/hi';
 
 interface Props {
+  addButtonVisible: boolean;
   addButtonPressed: () => void;
   refreshButtonPressed: () => void;
 }
@@ -21,14 +22,18 @@ const ManageButtonsRow = (props: Props) => {
           <HiRefresh size={20} color={Color.white} />
         </SmallMainButton>
       </Col>
-      <Col>
-        <SmallMainButton
-          backgroundColor={Color['light-blue']}
-          onPressed={props.addButtonPressed}
-          title="Thêm"
-          textColor={Color.white}
-        />
-      </Col>
+      {props.addButtonVisible ? (
+        <Col>
+          <SmallMainButton
+            backgroundColor={Color['light-blue']}
+            onPressed={props.addButtonPressed}
+            title="Thêm"
+            textColor={Color.white}
+          />
+        </Col>
+      ) : (
+        <></>
+      )}
     </Row>
   );
 };

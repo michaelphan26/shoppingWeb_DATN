@@ -46,14 +46,6 @@ export interface UserInterface{
   role_name: string,
 }
 
-export interface UserInfo{
-  _id:string,
-  name:string,
-  phone:string,
-  address:string,
-  joinDate:string
-}
-
 export interface CartInterface{
   productList: [],
   total:number
@@ -115,4 +107,60 @@ export const initialCompanyItem={
   phone: '',
   address: '',
   tax_number:''
+}
+
+export interface UserInterface{
+  _id: string,
+  email: string,
+  id_role: string,
+  id_userInfo:string,
+}
+
+export const initialUserInterface={
+  _id: "",
+  email: "",
+  id_role: "",
+  id_userInfo: "",
+  role_name: "",
+}
+
+export interface UserDetailInterface{
+  _id: string,
+  name: string,
+  phone: string,
+  address: string,
+  joinDate:string,
+}
+
+export const initialUserDetailInterface = {
+  _id: "",
+  email: "",
+  password:"",
+  name: "",
+  phone: "",
+  address: "",
+  joinDate:""
+}
+
+export interface UserAPIInterface{
+  email: string;
+  password: string;
+  name: string;
+  phone: string;
+  address: string;
+  id_role: string | Object;
+}
+
+export const initialUserAPIInterface={
+  email: '',
+  password: '',
+  name: '',
+  phone: '',
+  address: '',
+  id_role: '',
+}
+
+export interface StatusInterface{
+  label: string;
+  value: boolean;
 }

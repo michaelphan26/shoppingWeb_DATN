@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { CartInterface, CompanyInterface, JustNameItemInterface, ProductItem, ReceiptInterface, UserInfo } from './common';
+import { CartInterface, CompanyInterface, JustNameItemInterface, ProductItem, ReceiptInterface, UserAPIInterface, UserDetailInterface } from './common';
 
 export const api_url = 'http://192.168.1.15:5000/api';
 
@@ -77,7 +77,7 @@ export async function getProductDetailFromAPI(_id:string) {
 export async function getUserInfoFromAPI() {
   const token = await window.sessionStorage.getItem('token');
   if (token) {
-    let userInfo = {} as UserInfo;
+    let userInfo = {} as UserDetailInterface;
     await axios({
       url: `${getUserDetailUrl}`,
       baseURL: `${api_url}`,
@@ -491,6 +491,212 @@ export async function deleteCompany(_id:string) {
       return code
     })
   return code
+  }
+  
+}
+
+export async function getUserListFromAPI() {
+  const token = await window.sessionStorage.getItem("token");
+  let userList = [] as any;
+  if (token) {
+    await axios({
+    url: `admin/account-list`,
+    baseURL: `${api_url}`,
+    method: 'get',
+    headers: {
+      "x-auth-token":token
+    },
+    responseType:'json',
+  }).then(res => {
+    if (res.data['code'] === 200) {
+      userList = res.data['data'];
+    }
+    else return res.data['message'] as string
+  }).catch(err => {
+    return err.response.data['message'] as string;
+  })
+
+  return userList;
+  }
+  
+}
+
+export async function getUserDetailListFromAPI() {
+  const token = await window.sessionStorage.getItem("token");
+  let userDetailList = [] as any;
+  if (token) {
+    await axios({
+    url: `admin/account-detail/get-list`,
+    baseURL: `${api_url}`,
+    method: 'get',
+    headers: {
+      "x-auth-token":token
+    },
+    responseType:'json',
+  }).then(res => {
+    if (res.data['code'] === 200) {
+      userDetailList = res.data['data'];
+    }
+    else return res.data['message'] as string
+  }).catch(err => {
+    return err.response.data['message'] as string;
+  })
+
+  return userDetailList;
+  }
+  
+}
+
+export async function addUserToAPI(userInfo:UserAPIInterface) {
+  const token = await window.sessionStorage.getItem("token");
+  let code: number = 0
+  if (token) {
+    await axios({
+    url: `admin/add-account`,
+    baseURL: `${api_url}`,
+    method: 'post',
+    headers: {
+      "x-auth-token":token
+    },
+    responseType: 'json',
+    data:userInfo
+  }).then(res => {
+    code=res.data['code']
+  }).catch(err => {
+    code= err.response.data['code'];
+  })
+  return code
+  }
+  
+}
+
+export async function editUserAPI(_id:string,userInfo:UserAPIInterface) {
+  const token = await window.sessionStorage.getItem("token");
+  let code: number = 0
+  if (token) {
+    await axios({
+    url: `admin/edit-account/${_id}`,
+    baseURL: `${api_url}`,
+    method: 'put',
+    headers: {
+      "x-auth-token":token
+    },
+    responseType: 'json',
+    data:userInfo
+  }).then(res => {
+    code=res.data['code']
+  }).catch(err => {
+    code= err.response.data['code'];
+  })
+  return code
+  }
+  
+}
+
+export async function getReceiptListAdminFromAPI() {
+  const token = await window.sessionStorage.getItem("token");
+  let receiptList = [] as any;
+  if (token) {
+    await axios({
+    url: 'admin/receipt-list',
+    baseURL: `${api_url}`,
+    method: 'get',
+    headers: {
+      "x-auth-token":token
+    },
+    responseType:'json',
+  }).then(res => {
+    if (res.data['code'] === 200) {
+      receiptList = res.data['data'] as ReceiptInterface;
+    }
+    else return res.data['message']
+  }).catch(err => {
+    return err.response.data['message'];
+  })
+
+  return receiptList;
+  }
+  
+}
+
+export async function getReceiptDetailAdminFromAPI(_id:string){
+  const token = await window.sessionStorage.getItem("token");
+  let receiptDetailList = [] as any;
+  if (token) {
+    await axios({
+    url: `admin/receipt-detail/${_id}`,
+    baseURL: `${api_url}`,
+    method: 'get',
+    headers: {
+      "x-auth-token":token
+    },
+    responseType:'json',
+  }).then(res => {
+    if (res.data['code'] === 200) {
+      receiptDetailList = res.data['data'];
+    }
+    else return res.data['message']
+  }).catch(err => {
+    return err.response.data['message'];
+  })
+
+  return receiptDetailList;
+  }
+  
+}
+
+export async function getUserInfoByIDFromAPI(_id: string) {
+  const token = await window.sessionStorage.getItem("token");
+  let userInfo = {} as UserDetailInterface;
+  if (token) {
+    await axios({
+      url: `admin/account-detail/${_id}`,
+      baseURL: `${api_url}`,
+      method: 'get',
+      headers: {
+        'x-auth-token': token,
+      },
+    })
+      .then((res) => {
+        if (res.data['code'] === 200) {
+          userInfo = res.data['data']
+        }
+        else {
+          return res.data['message'] as string;
+        }
+      })
+      .catch((err) => {
+        return err.response.data['message'] as string
+      });
+    return userInfo;
+  }
+}
+
+export async function getProductListAdminFromAPI() {
+  const token = await window.sessionStorage.getItem("token");
+  let productList = [] as any;
+  if (token) {
+    await axios({
+      url: `/admin/product-list`,
+      baseURL: `${api_url}`,
+      method: 'get',
+    responseType: 'json',
+    headers: {
+        "x-auth-token":token
+      }
+    })
+      .then((res) => {
+        if (res.data['code'] === 200) {
+           productList=res.data['data'];
+        }
+        else {
+          return res.data['message'] as string
+        }
+      })
+      .catch((err) => {
+        return err.response.data['message'] as string;
+      });
+  return productList
   }
   
 }

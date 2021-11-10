@@ -1,32 +1,40 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Modal, Row } from 'react-bootstrap';
+import { Col, Row, Modal } from 'react-bootstrap';
 import { Controller, useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
-import { useHistory } from 'react-router';
-import { SmallMainButton } from '../../../common/ui/base/button';
+import { useHistory } from 'react-router-dom';
 import { SmallTextInput } from '../../../common/ui/base/textInput';
+import { SmallMainButton } from '../../../common/ui/base/button';
 import { toastNotify } from '../../../common/ui/base/toast/notify';
+import DropdownList from 'react-widgets/DropdownList';
+import 'react-widgets/styles.css';
+import './style.scss';
 import AdminLayout from '../../../common/ui/layout/admin-layout';
-import CompanyTable from './components/companyTable';
 import ManageButtonsRow from '../../../common/ui/layout/admin-layout/components/manageButtonsRow';
 import {
-  addCompanyToAPI,
-  deleteCompany,
-  editCompanyAPI,
-  getCompanyListFromAPI,
+  addUserToAPI,
+  editUserAPI,
+  getRoleFromAPI,
+  getUserDetailListFromAPI,
+  getUserListFromAPI,
 } from '../../../common/util/baseAPI';
 import {
-  CompanyInterface,
-  initialCompanyItem,
+  initialUserDetailInterface,
+  initialUserAPIInterface,
+  emailReg,
   phoneReg,
+  UserDetailInterface,
+  UserInterface,
+  UserAPIInterface,
+  initialUserInterface,
 } from '../../../common/util/common';
 import { Color, NotifyType, Url } from '../../../common/util/enum';
 import { RootState } from '../../../models/store';
+import UserTable from './components/userTable';
 
-const AdminCompany = () => {
+const AdminUser = () => {
   const account = useSelector((state: RootState) => state.accountReducer);
   const history = useHistory();
-  const [companyList, setCompanyList] = useState([] as any);
   const {
     control,
     handleSubmit,
@@ -35,20 +43,47 @@ const AdminCompany = () => {
     clearErrors,
   } = useForm({
     reValidateMode: 'onSubmit',
-    defaultValues: initialCompanyItem,
+    defaultValues: initialUserAPIInterface,
   });
-  const [company, setCompany] = useState<CompanyInterface>(initialCompanyItem);
+  const [user, setUser] = useState<UserInterface>(initialUserInterface);
+  const [userList, setUserList] = useState([] as any);
+  const [userDetailList, setUserDetailList] = useState([] as any);
+  const [userDetail, setUserDetail] = useState<UserDetailInterface>(
+    initialUserDetailInterface
+  );
+  const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
+  const [roleList, setRoleList] = useState([] as any);
   const [modalShow, setModalShow] = useState<boolean>(false);
-  const [deleteModalShow, setDeleteModalShow] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isCanceled, setIsCanceled] = useState<boolean>(false);
 
-  const getCompanyListAdmin = async () => {
-    const companyListFromAPI = await getCompanyListFromAPI();
-    if (Object.keys(companyListFromAPI).length !== 0) {
-      setCompanyList(companyListFromAPI);
+  const getUserListAdmin = async () => {
+    const userListFromAPI = await getUserListFromAPI();
+    if (Object.keys(userListFromAPI).length !== 0) {
+      setUserList(userListFromAPI);
     } else {
-      toastNotify(NotifyType.error, 'Không thể lấy danh sách đối tác');
+      toastNotify(NotifyType.error, 'Không thể lấy danh sách tài khoản');
+    }
+  };
+
+  const getUserDetailListAdmin = async () => {
+    const userDetailListFromAPI = await getUserDetailListFromAPI();
+    if (Object.keys(userDetailListFromAPI).length !== 0) {
+      setUserDetailList(userDetailListFromAPI);
+    } else {
+      toastNotify(
+        NotifyType.error,
+        'Không thể lấy danh sách thông tin tài khoản'
+      );
+    }
+  };
+
+  const getRoleListAdmin = async () => {
+    const roleListFromAPI = await getRoleFromAPI();
+    if (Object.keys(roleListFromAPI).length !== 0) {
+      setRoleList(roleListFromAPI);
+    } else {
+      toastNotify(NotifyType.error, 'Không thể lấy danh sách chức vụ');
     }
   };
 
@@ -60,90 +95,97 @@ const AdminCompany = () => {
       history.push(Url.Home);
       toastNotify(NotifyType.warning, 'Bạn không thể vào được trang này');
     } else {
-      getCompanyListAdmin();
+      getUserListAdmin();
+      getUserDetailListAdmin();
+      getRoleListAdmin();
     }
   }, []);
 
-  const resetValue = (item: CompanyInterface) => {
+  const resetValue = (item: UserAPIInterface) => {
     reset(item);
     clearErrors();
   };
 
   const handleRefreshPressed = () => {
-    getCompanyListAdmin();
+    getUserListAdmin();
+    getUserDetailListAdmin();
   };
 
   const handleAddPressed = () => {
-    setCompany(initialCompanyItem);
-    resetValue(initialCompanyItem);
+    setUser(initialUserInterface);
+    setUserDetail(initialUserDetailInterface);
+    resetValue(initialUserAPIInterface);
     setModalShow(true);
     setIsEditing(false);
   };
 
-  const handleEditPressed = (item: CompanyInterface) => {
-    setCompany(item);
-    resetValue(item);
+  const handleEditPressed = (
+    user: UserInterface,
+    userDetail: UserDetailInterface
+  ) => {
+    setUser(user);
+    setUserDetail(userDetail);
+    resetValue({
+      email: user.email,
+      password: '',
+      name: userDetail.name,
+      phone: userDetail.phone,
+      address: userDetail.address,
+      id_role: { _id: user.id_role, name: user.role_name },
+    });
     setModalShow(true);
     setIsEditing(true);
   };
 
-  const handleDeletePressed = (item: CompanyInterface) => {
-    setCompany(item);
-    setDeleteModalShow(true);
-  };
-
   const handleModalClose = () => {
+    setUser(initialUserInterface);
     setModalShow(false);
-    setDeleteModalShow(false);
-    setCompany(initialCompanyItem);
+    setUserDetail(initialUserDetailInterface);
     setIsEditing(false);
-    resetValue(initialCompanyItem);
+    resetValue(initialUserDetailInterface);
   };
 
-  const handleSavePressed = async (companyInfo: CompanyInterface) => {
+  const handleSavePressed = async (userInfo: UserAPIInterface) => {
     if (isCanceled) {
       handleModalClose();
       setIsCanceled(false);
     } else {
       if (isEditing) {
-        delete companyInfo._id;
-        delete companyInfo.__v;
-        const code = await editCompanyAPI(company._id, companyInfo);
+        delete userInfo.email;
+        delete userInfo.password;
+        const id_role = userInfo.id_role._id;
+        userInfo.id_role = id_role;
+        const code = await editUserAPI(user._id, userInfo);
         if (code === 200) {
           handleModalClose();
           toastNotify(
             NotifyType.success,
-            'Chỉnh sửa thông tin đối tác thành công'
+            'Chỉnh sửa thông tin tài khoản thành công'
           );
           handleRefreshPressed();
         } else {
           handleModalClose();
-          toastNotify(NotifyType.error, 'Chỉnh sửa thông tin đối tác thất bại');
+          toastNotify(
+            NotifyType.error,
+            'Chỉnh sửa thông tin tài khoản thất bại'
+          );
         }
       } else {
-        delete companyInfo._id;
-        const code = await addCompanyToAPI(companyInfo);
+        const id_role = userInfo.id_role._id;
+        userInfo.id_role = id_role;
+        delete userInfo._id;
+        delete userInfo.joinDate;
+        console.log(userInfo);
+        const code = await addUserToAPI(userInfo);
         if (code === 200) {
           handleModalClose();
-          toastNotify(NotifyType.success, 'Thêm đối tác thành công');
+          toastNotify(NotifyType.success, 'Thêm tài khoản thành công');
           handleRefreshPressed();
         } else {
           handleModalClose();
-          toastNotify(NotifyType.error, 'Thêm đối tác thất bại');
+          toastNotify(NotifyType.error, 'Thêm tài khoản thất bại');
         }
       }
-    }
-  };
-
-  const handleDeleteOkPressed = async () => {
-    const code = await deleteCompany(company._id);
-    if (code === 200) {
-      handleModalClose();
-      toastNotify(NotifyType.success, 'Xóa đối tác thành công');
-      handleRefreshPressed();
-    } else {
-      handleModalClose();
-      toastNotify(NotifyType.error, 'Xóa đối tác thất bại');
     }
   };
 
@@ -152,7 +194,7 @@ const AdminCompany = () => {
       <h3
         style={{ marginTop: '5px', marginLeft: '10px', marginBottom: '20px' }}
       >
-        Quản lý đối tác
+        Quản lý tài khoản
       </h3>
       <Row style={{ marginBottom: '10px' }}>
         <Col sm={9} />
@@ -164,10 +206,11 @@ const AdminCompany = () => {
           />
         </Col>
       </Row>
-      <CompanyTable
-        itemList={companyList}
+      <UserTable
+        userList={userList}
+        userDetailList={userDetailList}
+        roleList={roleList}
         onEditPressed={handleEditPressed}
-        onDeletePressed={handleDeletePressed}
       />
       <Modal
         show={modalShow}
@@ -176,7 +219,7 @@ const AdminCompany = () => {
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Thông tin đối tác</Modal.Title>
+          <Modal.Title>Thông tin tài khoản</Modal.Title>
         </Modal.Header>
         <form onSubmit={handleSubmit(handleSavePressed)}>
           <Modal.Body>
@@ -192,6 +235,54 @@ const AdminCompany = () => {
               }}
             >
               <Row style={{ width: '80%' }}>
+                <Controller
+                  control={control}
+                  rules={{ required: true, pattern: emailReg }}
+                  render={({ field: { value, onChange } }) => (
+                    <SmallTextInput
+                      type="text"
+                      placeholder="Email"
+                      onChange={onChange}
+                      eyeVisible={false}
+                      passwordVisible={false}
+                      toggleVisible={() => {}}
+                      disabled={isEditing ? true : false}
+                      value={value}
+                    />
+                  )}
+                  name="email"
+                  defaultValue=""
+                />
+                {errors.email && (
+                  <span className="errorText">Email không hợp lệ</span>
+                )}
+
+                <Controller
+                  control={control}
+                  rules={{
+                    required: isEditing ? false : true,
+                    minLength: 8,
+                    maxLength: 30,
+                  }}
+                  render={({ field: { value, onChange } }) => (
+                    <SmallTextInput
+                      type="text"
+                      placeholder="Mật khẩu"
+                      onChange={onChange}
+                      eyeVisible={true}
+                      passwordVisible={passwordVisible}
+                      toggleVisible={() => setPasswordVisible(!passwordVisible)}
+                      disabled={isEditing ? true : false}
+                      value={value}
+                    />
+                  )}
+                  name="password"
+                  defaultValue=""
+                />
+                {errors.password && (
+                  <span className="errorText">Mật khẩu không đúng</span>
+                )}
+
                 <Controller
                   control={control}
                   rules={{ required: true, minLength: 2, maxLength: 50 }}
@@ -260,11 +351,11 @@ const AdminCompany = () => {
 
                 <Controller
                   control={control}
-                  rules={{ required: true, minLength: 2, maxLength: 50 }}
+                  rules={{ required: true, minLength: 5, maxLength: 200 }}
                   render={({ field: { value, onChange } }) => (
                     <SmallTextInput
                       type="text"
-                      placeholder="Mã số thuế"
+                      placeholder="Địa chỉ"
                       onChange={onChange}
                       eyeVisible={false}
                       passwordVisible={false}
@@ -273,11 +364,30 @@ const AdminCompany = () => {
                       value={value}
                     />
                   )}
-                  name="tax_number"
+                  name="address"
                   defaultValue=""
                 />
-                {errors.tax_number && (
-                  <span className="errorText">MST không hợp lệ</span>
+                {errors.address && (
+                  <span className="errorText">Địa chỉ không hợp lệ</span>
+                )}
+
+                <Controller
+                  control={control}
+                  rules={{ required: true, minLength: 2, maxLength: 200 }}
+                  render={({ field: { value, onChange } }) => (
+                    <DropdownList
+                      data={roleList}
+                      dataKey="_id"
+                      textField="name"
+                      onChange={onChange}
+                      value={value}
+                    />
+                  )}
+                  name="id_role"
+                  defaultValue=""
+                />
+                {errors.id_role && (
+                  <span className="errorText">Chưa chọn chức vụ</span>
                 )}
               </Row>
             </Col>
@@ -298,35 +408,8 @@ const AdminCompany = () => {
           </Modal.Footer>
         </form>
       </Modal>
-      <Modal
-        show={deleteModalShow}
-        onHide={handleModalClose}
-        backdrop="static"
-        keyboard={false}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Xóa đối tác</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <span>Bạn có chắc chắn muốn xóa đối tác này?</span>
-        </Modal.Body>
-        <Modal.Footer>
-          <SmallMainButton
-            title="Xóa"
-            textColor={Color.white}
-            backgroundColor={Color['light-blue']}
-            onPressed={handleDeleteOkPressed}
-          />
-          <SmallMainButton
-            title="Hủy"
-            textColor={Color.white}
-            backgroundColor={Color.pink}
-            onPressed={handleModalClose}
-          />
-        </Modal.Footer>
-      </Modal>
     </AdminLayout>
   );
 };
 
-export default AdminCompany;
+export default AdminUser;

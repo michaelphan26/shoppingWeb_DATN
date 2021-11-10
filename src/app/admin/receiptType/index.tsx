@@ -146,6 +146,7 @@ const AdminReceiptType = () => {
           <ManageButtonsRow
             refreshButtonPressed={handleRefreshPressed}
             addButtonPressed={handleAddPressed}
+            addButtonVisible={true}
           />
         </Col>
       </Row>

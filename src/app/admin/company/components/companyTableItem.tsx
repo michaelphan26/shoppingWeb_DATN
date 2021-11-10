@@ -1,7 +1,7 @@
 import React from 'react';
 import { Col, Row } from 'react-bootstrap';
-import { CompanyInterface } from '../../../../util/common';
-import ActionButtonsRow from './actionButtonsRow';
+import { CompanyInterface } from '../../../../common/util/common';
+import ActionButtonsRow from '../../../../common/ui/layout/admin-layout/components/actionButtonsRow';
 
 interface Props {
   item: CompanyInterface;

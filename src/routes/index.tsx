@@ -4,8 +4,11 @@ import AdminCategory from '../app/admin/category';
 import AdminCompany from '../app/admin/company';
 import AdminDashboard from '../app/admin/dashboard';
 import AdminIOType from '../app/admin/ioType';
+import AdminProduct from '../app/admin/product';
+import AdminReceipt from '../app/admin/receipt';
 import AdminReceiptType from '../app/admin/receiptType';
 import AdminRole from '../app/admin/role';
+import AdminUser from '../app/admin/user';
 import Login from '../app/auth/login';
 import Register from '../app/auth/register';
 import Cart from '../app/cart';
@@ -46,6 +49,9 @@ const Routes = () => {
           <Route exact path={Url.AdminIOType} component={AdminIOType} />
           <Route exact path={Url.AdminRole} component={AdminRole} />
           <Route exact path={Url.AdminCompany} component={AdminCompany} />
+          <Route exact path={Url.AdminAccount} component={AdminUser} />
+          <Route exact path={Url.AdminReceipt} component={AdminReceipt} />
+          <Route exact path={Url.AdminProduct} component={AdminProduct} />
         </Switch>
       </Router>
     </div>

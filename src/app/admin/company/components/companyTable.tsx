@@ -1,7 +1,7 @@
 import React from 'react';
 import { Col, Row } from 'react-bootstrap';
-import { CompanyInterface } from '../../../../util/common';
-import Divider from '../../../base/divider';
+import Divider from '../../../../common/ui/base/divider';
+import { CompanyInterface } from '../../../../common/util/common';
 import CompanyTableItem from './companyTableItem';
 
 interface Props {

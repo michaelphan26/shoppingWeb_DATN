@@ -164,3 +164,29 @@ export interface StatusInterface{
   label: string;
   value: boolean;
 }
+
+export interface ioProductDetailItem{
+  id_product: string,
+  id_company: string,
+  price: number,
+  quantity:number
+}
+
+export const initialIOProductDetailItem: ioProductDetailItem = {
+  id_product: '',
+  id_company: '',
+  price: 0,
+  quantity:0
+}
+
+export interface ioProductInterface{
+  _id: string,
+  date: string,
+  id_ioType:string
+}
+
+export const initialIOProduct: ioProductInterface = {
+  _id: '',
+  date: '',
+  id_ioType:''
+}

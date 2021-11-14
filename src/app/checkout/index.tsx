@@ -101,7 +101,6 @@ const Checkout = (props: Props) => {
             toastNotify(NotifyType.error, 'Xảy ra lỗi. Đặt hàng thất bại');
           });
       } else {
-        history.push('/login', { checkingOut: true });
         toastNotify(NotifyType.error, 'Vui lòng đăng nhập để tiếp tục');
       }
     }

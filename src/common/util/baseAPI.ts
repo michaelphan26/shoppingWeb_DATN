@@ -700,3 +700,143 @@ export async function getProductListAdminFromAPI() {
   }
   
 }
+
+export async function getIOProductListFromAPI() {
+  const token = await window.sessionStorage.getItem("token");
+  let ioProductList = [] as any
+  if (token) {
+    await axios({
+    url: 'io-product/io-list',
+    baseURL: `${api_url}`,
+    headers: {
+      "x-auth-token":token
+    },
+    responseType:'json'
+  }).then(res => {
+    if (res.data['code'] === 200)
+      ioProductList = res.data['data']
+    else return res.data['message']
+  }).catch(err =>{
+    return err.response['data']
+  })
+  return ioProductList
+  }
+  
+}
+
+export async function getIOProductDetailFromAPI(ioProductID:string) {
+  const token = await window.sessionStorage.getItem("token");
+  let ioDetailList = [] as any
+  if (token) {
+    await axios({
+    url: `io-detail/${ioProductID}`,
+    baseURL: `${api_url}`,
+    headers: {
+      "x-auth-token":token
+    },
+    responseType:'json'
+  }).then(res => {
+    if (res.data['code'] === 200)
+      ioDetailList = res.data['data']
+    else return res.data['message']
+  }).catch(err =>{
+    return err.response['data']
+  })
+  return ioDetailList
+  }
+  
+}
+
+
+export async function addProductAPI(productInfo: ProductItem) {
+  const token = await window.sessionStorage.getItem("token");
+  let code: number = 0
+  if (token) {
+    await axios({
+    url: `${adminAddProductUrl}`,
+    baseURL: `${api_url}`,
+    method: 'post',
+    headers: {
+      "x-auth-token":token
+    },
+    responseType: 'json',
+    data:productInfo
+  }).then(res => {
+    code=res.data['code']
+  }).catch(err => {
+    code= err.response.data['code'];
+  })
+  return code
+  }
+  
+}
+
+export async function editProductAPI(productInfo: ProductItem,_id:string) {
+  const token = await window.sessionStorage.getItem("token");
+  let code:number=0
+  if (token) {
+    await axios({
+    url: `${adminEditProductUrl}${_id}`,
+    baseURL: `${api_url}`,
+    method: 'put',
+    headers: {
+      "x-auth-token":token
+    },
+    responseType: 'json',
+    data:productInfo
+  }).then(res => {
+    code=res.data['code']
+  }).catch(err => {
+    code= err.response.data['code'];
+  })
+  return code
+  }
+}
+
+export async function getCompanyDetailFromAPI(id_company:string) {
+  const token = await window.sessionStorage.getItem("token");
+  let companyDetail = {} as CompanyInterface
+  if (token) {
+    await axios({
+    url: `${getCompanyUrl}${id_company}`,
+    baseURL: `${api_url}`,
+    headers: {
+      "x-auth-token":token
+    },
+    responseType:'json'
+  }).then(res => {
+    if (res.data['code'] === 200)
+      companyDetail = res.data['data']
+    else return res.data['message']
+  }).catch(err =>{
+    return err.response['data']
+  })
+  
+  }
+  return companyDetail
+}
+
+export async function addIOProductAPI(ioProductDetailList: [], id_ioType: string) {
+  const token = await window.sessionStorage.getItem("token");
+  let code: number = 0
+  if (token) {
+    await axios({
+      url: `${adminAddIOProductUrl}`,
+      baseURL: `${api_url}`,
+      method: 'post',
+      headers: {
+        "x-auth-token": token
+      },
+      responseType: 'json',
+      data: {
+        id_ioType: id_ioType,
+        productList: ioProductDetailList
+      }
+    }).then(res => {
+      code = res.data['code']
+    }).catch(err => {
+      code = err.response.data['code'];
+    })
+    return code;
+  }
+}

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
-import { ProductItem, StatusInterface } from '../../../common/util/common';
+import { ProductItem, StatusInterface } from '../../../../common/util/common';
 import numeral from 'numeral';
-import { SmallMainButton } from '../../../common/ui/base/button';
-import { Color } from '../../../common/util/enum';
-import ActionButtonsRow from '../../../common/ui/layout/admin-layout/components/actionButtonsRow';
+import { SmallMainButton } from '../../../../common/ui/base/button';
+import { Color } from '../../../../common/util/enum';
+import ActionButtonsRow from '../../../../common/ui/layout/admin-layout/components/actionButtonsRow';
 
 interface Props {
   item: ProductItem;

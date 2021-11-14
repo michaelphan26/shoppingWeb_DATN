@@ -3,20 +3,30 @@ import { Col, Modal, Row } from 'react-bootstrap';
 import { Controller, useForm } from 'react-hook-form';
 import DropdownList from 'react-widgets/esm/DropdownList';
 import { SmallMainButton } from '../../../common/ui/base/button';
+import SmallTextArea from '../../../common/ui/base/textArea';
 import { SmallTextInput } from '../../../common/ui/base/textInput';
 import { toastNotify } from '../../../common/ui/base/toast/notify';
 import AdminLayout from '../../../common/ui/layout/admin-layout';
 import ManageButtonsRow from '../../../common/ui/layout/admin-layout/components/manageButtonsRow';
-import { getProductListAdminFromAPI } from '../../../common/util/baseAPI';
-import { initialProductItem, ProductItem } from '../../../common/util/common';
+import {
+  getProductListAdminFromAPI,
+  getCategoryListFromAPI,
+  editProductAPI,
+  addProductAPI,
+} from '../../../common/util/baseAPI';
+import {
+  initialProductItem,
+  JustNameItemInterface,
+  ProductItem,
+} from '../../../common/util/common';
 import { NotifyType, Color } from '../../../common/util/enum';
-import ProductTable from './productTable';
+import ProductTable from './components/productTable';
 
 const AdminProduct = () => {
   const [productList, setProductList] = useState([] as any);
   const statusList = [
-    { label: 'Đang kinh doanh', value: 'true' },
-    { label: 'Ngừng kinh doanh', value: 'false' },
+    { name: 'Đang kinh doanh', _id: 'true' },
+    { name: 'Ngừng kinh doanh', _id: 'false' },
   ] as [];
   const [modalShow, setModalShow] = useState<boolean>(false);
   const {
@@ -24,7 +34,11 @@ const AdminProduct = () => {
     control,
     formState: { errors },
     reset,
+    clearErrors,
   } = useForm({ reValidateMode: 'onSubmit' });
+  const [categoryList, setCategoryList] = useState([] as any);
+  const [image, setImage] = useState<string>('');
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
   const getProductListAdmin = async () => {
     const productListFromAPI = await getProductListAdminFromAPI();
@@ -35,40 +49,140 @@ const AdminProduct = () => {
     }
   };
 
+  const getCategoryListAdmin = async () => {
+    const categoryListFromAPI = await getCategoryListFromAPI();
+    if (Object.keys(categoryListFromAPI).length !== 0) {
+      setCategoryList(categoryListFromAPI);
+    } else {
+      toastNotify(NotifyType.error, 'Không thể lấy danh sách danh mục');
+    }
+  };
+
   useEffect(() => {
     getProductListAdmin();
+    getCategoryListAdmin();
   }, []);
 
-  const handleDetailView = () => {};
+  const resetValue = (item: ProductItem) => {
+    const categoryItem = categoryList.find(
+      (findItem: JustNameItemInterface) => {
+        return findItem._id === item.id_category;
+      }
+    );
+    reset({
+      _id: item._id,
+      name: item.name,
+      brand: item.brand,
+      id_category: { _id: categoryItem._id, name: categoryItem.name },
+      price: item.price,
+      description: item.description,
+      image: item.image,
+      stock: item.stock,
+      discount: item.discount,
+      status: item.status
+        ? { name: 'Đang kinh doanh', _id: item.status }
+        : { name: 'Ngừng kinh doanh', _id: item.status },
+    });
+    setImage(item.image);
+    clearErrors();
+    setIsEditing(true);
+  };
 
-  const handleRefreshPressed = () => {};
+  const handleAddPressed = () => {
+    setModalShow(true);
+    setIsEditing(false);
+  };
+
+  const handleDetailView = (item: ProductItem) => {
+    resetValue(item);
+    setModalShow(true);
+  };
+
+  const handleRefreshPressed = () => {
+    getProductListAdmin();
+    getCategoryListAdmin();
+  };
 
   const handleModalClose = () => {
+    const resetProduct = initialProductItem;
+    resetProduct.status = '';
+    reset(resetProduct);
+    setImage('');
+    clearErrors();
     setModalShow(false);
   };
 
-  const handleSavePressed = () => {};
+  const handleSavePressed = async (item: ProductItem) => {
+    item.id_category = item.id_category._id;
+    item.status = item.status._id;
+    if (isEditing) {
+      item.image = image;
+      const id = item._id;
+      delete item._id;
+      delete item.stock;
+      const resultCode = await editProductAPI(item, id);
+      if (resultCode === 200) {
+        handleModalClose();
+        toastNotify(
+          NotifyType.success,
+          'Cập nhật thông tin sản phẩm thành công'
+        );
+        handleRefreshPressed();
+      } else {
+        handleModalClose();
+        toastNotify(NotifyType.error, 'Cập nhật thông tin sản phẩm thất bại');
+      }
+    } else {
+      if (image === '') {
+        toastNotify(NotifyType.warning, 'Chưa chọn hình ảnh');
+      } else {
+        item.image = image;
+        delete item._id;
+        delete item.stock;
+        const resultCode = await addProductAPI(item);
+        if (resultCode === 200) {
+          handleModalClose();
+          toastNotify(NotifyType.success, 'Thêm sản phẩm thành công');
+          handleRefreshPressed();
+        } else {
+          handleModalClose();
+          toastNotify(NotifyType.error, 'Thêm sản phẩm thất bại');
+        }
+      }
+    }
+  };
+
+  const handleImageChange = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      let reader = new FileReader();
+      reader.onloadend = (e) => {
+        const base64Result = e.target.result.split(',')[1];
+        setImage(base64Result);
+      };
+      reader.readAsDataURL(event.target.files[0]);
+    }
+  };
 
   return (
     <AdminLayout>
       <h3
         style={{ marginTop: '5px', marginLeft: '10px', marginBottom: '20px' }}
       >
-        Quản lý hóa đơn
+        Quản lý sản phẩm
       </h3>
       <Row style={{ marginBottom: '10px' }}>
         <Col sm={9} />
         <Col sm={3}>
           <ManageButtonsRow
             refreshButtonPressed={handleRefreshPressed}
-            addButtonPressed={() => setModalShow(true)}
+            addButtonPressed={handleAddPressed}
             addButtonVisible={true}
           />
         </Col>
       </Row>
       <ProductTable
         productList={productList}
-        onEditPressed={handleDetailView}
+        onDetailPressed={handleDetailView}
       />
       <Modal
         show={modalShow}
@@ -104,7 +218,7 @@ const AdminProduct = () => {
                       eyeVisible={false}
                       passwordVisible={false}
                       toggleVisible={() => {}}
-                      disabled={false}
+                      disabled={isEditing}
                       value={value}
                     />
                   )}
@@ -119,8 +233,8 @@ const AdminProduct = () => {
                   control={control}
                   rules={{
                     required: true,
-                    minLength: 8,
-                    maxLength: 30,
+                    minLength: 2,
+                    maxLength: 100,
                   }}
                   render={({ field: { value, onChange } }) => (
                     <SmallTextInput
@@ -146,7 +260,7 @@ const AdminProduct = () => {
                   rules={{ required: true, minLength: 2, maxLength: 200 }}
                   render={({ field: { value, onChange } }) => (
                     <DropdownList
-                      data={productList}
+                      data={categoryList}
                       dataKey="_id"
                       textField="name"
                       onChange={onChange}
@@ -154,16 +268,16 @@ const AdminProduct = () => {
                       style={{ marginBottom: '20px' }}
                     />
                   )}
-                  name="category"
+                  name="id_category"
                   defaultValue=""
                 />
-                {errors.category && (
+                {errors.id_category && (
                   <span className="errorText">Chưa chọn danh mục</span>
                 )}
 
                 <Controller
                   control={control}
-                  rules={{ required: true, minLength: 2, maxLength: 50 }}
+                  rules={{ required: true, min: 1000, max: 1000000000 }}
                   render={({ field: { value, onChange } }) => (
                     <SmallTextInput
                       type="text"
@@ -185,7 +299,7 @@ const AdminProduct = () => {
 
                 <Controller
                   control={control}
-                  rules={{ required: true, minLength: 2, maxLength: 200 }}
+                  rules={{ required: true, min: 0, max: 100 }}
                   render={({ field: { value, onChange } }) => (
                     <SmallTextInput
                       type="text"
@@ -210,26 +324,68 @@ const AdminProduct = () => {
                   rules={{ required: true, minLength: 2, maxLength: 200 }}
                   render={({ field: { value, onChange } }) => (
                     <DropdownList
-                      data={productList}
+                      data={statusList}
                       dataKey="_id"
                       textField="name"
                       onChange={onChange}
                       value={value}
                     />
                   )}
-                  name="id_role"
+                  name="status"
                   defaultValue=""
                 />
-                {errors.id_role && (
+                {errors.status && (
                   <span className="errorText">Chưa chọn trạng thái</span>
                 )}
 
-                <SmallMainButton
-                  title="Chọn hình ảnh"
-                  textColor={Color.white}
-                  backgroundColor={Color['light-blue']}
-                  onPressed={() => {}}
+                <div style={{ height: '20px' }} />
+                <input
+                  className="filetype"
+                  type="file"
+                  onChange={handleImageChange}
+                  accept="/image*"
                 />
+                <div style={{ height: '20px' }} />
+                {image === '' ? (
+                  <div />
+                ) : (
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignContent: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <img
+                      src={'data:image/png;base64,' + image}
+                      className="adminImgStyle"
+                    />
+                  </div>
+                )}
+
+                <div style={{ height: '20px' }} />
+
+                <Controller
+                  control={control}
+                  rules={{
+                    required: true,
+                    minLength: 2,
+                    maxLength: 200,
+                  }}
+                  render={({ field: { value, onChange } }) => (
+                    <SmallTextArea
+                      placeholder="Mô tả"
+                      onChange={onChange}
+                      disabled={false}
+                      value={value}
+                    />
+                  )}
+                  name="description"
+                  defaultValue=""
+                />
+                {errors.description && (
+                  <span className="errorText">Mô tả sản phẩm không hợp lệ</span>
+                )}
               </Row>
             </Col>
           </Modal.Body>

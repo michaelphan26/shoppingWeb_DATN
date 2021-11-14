@@ -33,7 +33,7 @@ const Login = (props: Props) => {
   } = useForm({ reValidateMode: 'onSubmit' });
   const [remember, setRemember] = useState<boolean>(false);
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
-  const checkingOut = props.location.state || false;
+  const next = new URLSearchParams(props.location.search).get('next');
   const dispatch = useDispatch();
 
   const handlePasswordVisibleToggle = () => {
@@ -96,11 +96,7 @@ const Login = (props: Props) => {
               res.headers['x-auth-token'] as string
             );
           }
-          if (checkingOut) {
-            props.history.push('/checkout');
-          } else {
-            props.history.push(Url.Home);
-          }
+          next ? props.history.push(next) : props.history.push(Url.Home);
         } else {
           toastNotify(NotifyType.error, 'Tài khoản hoặc mật khẩu không đúng');
         }

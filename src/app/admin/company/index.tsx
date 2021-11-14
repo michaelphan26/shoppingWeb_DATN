@@ -53,15 +53,7 @@ const AdminCompany = () => {
   };
 
   useEffect(() => {
-    if (
-      (account.role_name.trim().toLowerCase() === 'admin') === false &&
-      (account.role_name.trim().toLowerCase() === 'quản trị') === false
-    ) {
-      history.push(Url.Home);
-      toastNotify(NotifyType.warning, 'Bạn không thể vào được trang này');
-    } else {
-      getCompanyListAdmin();
-    }
+    getCompanyListAdmin();
   }, []);
 
   const resetValue = (item: CompanyInterface) => {

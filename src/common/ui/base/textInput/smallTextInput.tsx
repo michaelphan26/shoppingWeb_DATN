@@ -10,7 +10,7 @@ interface Props {
   passwordVisible: boolean;
   toggleVisible: () => void;
   disabled: boolean;
-  value: string;
+  value: string | number;
 }
 const SmallTextInput = (props: Props) => {
   return (

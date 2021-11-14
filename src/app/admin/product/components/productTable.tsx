@@ -1,12 +1,12 @@
 import React from 'react';
 import { Col, Row } from 'react-bootstrap';
-import Divider from '../../../common/ui/base/divider';
-import { ProductItem } from '../../../common/util/common';
+import Divider from '../../../../common/ui/base/divider';
+import { ProductItem } from '../../../../common/util/common';
 import ProductTableItem from './productTableItem';
 
 interface Props {
   productList: [];
-  onEditPressed: (item: ProductItem) => void;
+  onDetailPressed: (item: ProductItem) => void;
 }
 const ProductTable = (props: Props) => {
   return (

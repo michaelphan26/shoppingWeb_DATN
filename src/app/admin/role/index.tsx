@@ -44,15 +44,7 @@ const AdminRole = () => {
   };
 
   useEffect(() => {
-    if (
-      (account.role_name.trim().toLowerCase() === 'admin') === false &&
-      (account.role_name.trim().toLowerCase() === 'quản trị') === false
-    ) {
-      history.push(Url.Home);
-      toastNotify(NotifyType.warning, 'Bạn không thể vào được trang này');
-    } else {
-      getRoleListAdmin();
-    }
+    getRoleListAdmin();
   }, []);
 
   const handleRefreshPressed = () => {
